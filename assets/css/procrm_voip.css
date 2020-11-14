@@ -1,0 +1,29 @@
+.procrm-voip-dropdown {
+    padding: 1rem;
+}
+
+/** Загрузка **/
+.procrm-voip-dropdown .loading {
+    text-align: center;
+}
+
+.procrm-voip-dropdown .loading i.fa {
+    font-size: 60px;
+}
+
+.procrm-voip-dropdown .loading span {
+    display: block;
+    margin-top: 1rem;
+}
+
+
+
+/** Звонок **/
+.procrm-voip-dropdown .procrm-voip-dial{
+    text-align: center;
+}
+
+.procrm-voip-dropdown .procrm-voip-dial audio{
+    /*display: block;*/
+    margin: 0 auto;
+}

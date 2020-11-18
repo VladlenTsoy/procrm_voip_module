@@ -17,6 +17,21 @@
 }
 
 
+/** Звонилка **/
+.procrm-voip-phone .header-call-phone{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.procrm-voip-phone .header-call-phone .info{
+    font-size: 20px;
+}
+
+.badge-success {
+    background: #28a745;
+}
+
 
 /** Звонок **/
 .procrm-voip-dropdown .procrm-voip-dial{
@@ -26,4 +41,31 @@
 .procrm-voip-dropdown .procrm-voip-dial audio{
     /*display: block;*/
     margin: 0 auto;
+}
+
+
+/** Входящий звонок **/
+.procrm-voip-dial-invite {
+    text-align: center;
+}
+
+.procrm-voip-dial-invite .title{
+    margin-bottom: 2rem;
+}
+
+.procrm-voip-dial-invite .image{
+    margin-bottom: 2rem;
+}
+
+.procrm-voip-dial-invite .image .client-profile-image-small{
+    height: 60px;
+    width: 60px;
+}
+
+.procrm-voip-dial-invite .name {
+    margin-bottom: 2rem;
+}
+
+.procrm-voip-dial-invite .actions {
+    margin-bottom: 0.5rem;
 }

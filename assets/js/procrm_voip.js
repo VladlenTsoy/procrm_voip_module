@@ -17,9 +17,9 @@ const loadingBlock = `
  */
 const registration = async (userAgent) => {
     const loadingStatus = $('.procrm-voip-dropdown .loading .status')
-    const registerer = new Registerer(userAgent);
+    window.procrm.registerer = new Registerer(userAgent)
 
-    registerer.stateChange.addListener(state => {
+    window.procrm.registerer.stateChange.addListener(state => {
         switch (state) {
             case RegistererState.Initial:
                 loadingStatus.val('Инициализация...')
@@ -31,14 +31,105 @@ const registration = async (userAgent) => {
                 innerForm('Ошибка при соединении!')
                 break
             case RegistererState.Unregistered:
-                innerForm('Ошибка при соединении!')
+                innerForm()
                 break
             default:
                 throw new Error("Unknown registerer state.");
         }
     })
 
-    await registerer.register()
+    await window.procrm.registerer.register()
+}
+
+/**
+ * Выйти из аккаунта
+ * @returns {Promise<void>}
+ */
+const unregister = async () => {
+    await window.procrm.registerer.unregister()
+    await window.procrm.userAgent.stop()
+}
+
+/**
+ *
+ * @returns {Promise<void>}
+ */
+const innerDialInvite = () => {
+    $('.procrm-voip-dropdown').html(`
+        <div class="procrm-voip-dial-invite">
+            <h4 class="title text-muted">Входящий звонок</h4>
+            <div class="image">
+                <img src="https://procrm.loc/assets/images/user-placeholder.jpg" class="client-profile-image-small"/>
+            </div>
+            <div class="name">
+                <h4>Владлен</h4>
+                <h5>+998-90-319-29-33</h5>
+            </div>
+            <div class="actions">
+                <button class="btn btn-success" id="procrm-voip-invite-accept">Принять</button>
+                <button class="btn btn-danger" id="procrm-voip-invite-reject">Отклонить</button>
+            </div>
+        </div>
+    `)
+}
+
+// Подлючен
+const onConnect = (e) => {
+    console.log(e)
+}
+
+//
+const onDisconnect = (e) => {
+    console.error(e)
+}
+
+//
+const onMessage = (e) => {
+    console.log(e)
+}
+
+//
+const onNotify = (e) => {
+    console.log(e)
+}
+
+/**
+ * Входящий звонок
+ * @param invitation
+ */
+const onInvite = function (invitation) {
+    alert(1)
+    innerDialInvite()
+    invitation.stateChange.addListener((state) => {
+        switch (state) {
+            case SessionState.Initial:
+                break;
+            case SessionState.Establishing:
+                break;
+            case SessionState.Established:
+                innerDial({phone: '00000000000'})
+                setupRemoteMedia(invitation);
+                break;
+            case SessionState.Terminating:
+            // fall through
+            case SessionState.Terminated:
+                cleanupMedia();
+                break;
+            default:
+                throw new Error("Unknown session state.");
+        }
+    });
+
+
+    $('#procrm-voip-invite-accept').click(function (e) {
+        e.preventDefault()
+        invitation.accept()
+    })
+
+    $('#procrm-voip-invite-reject').click(function (e) {
+        e.preventDefault()
+        invitation.reject()
+    })
 }
 
 /**
@@ -60,7 +151,7 @@ const createUserAgent = async ({login, ip, password, displayName = 'PROCRM WebRT
             authorizationUser: login,
             authorizationPassword: password,
             transportOptions: {
-                server: `ws://${ip}:8088/ws`,
+                server: `wss://${ip}:8089/ws`,
                 traceSip: false,
             },
             sessionDescriptionHandlerConfiguration: {
@@ -71,6 +162,13 @@ const createUserAgent = async ({login, ip, password, displayName = 'PROCRM WebRT
             },
             logBuiltinEnabled: true,
             logConfiguration: true,
+            delegate: {
+                onInvite,
+                onConnect,
+                onDisconnect,
+                onMessage,
+                onNotify,
+            }
         })
 
         await window.procrm.userAgent.start()
@@ -93,6 +191,15 @@ const saveAuthData = ({sip, password, ip}) => {
 }
 
 /**
+ * Очистить данные
+ */
+const clearAuthData = () => {
+    localStorage.removeItem('procrm_voip_sip')
+    localStorage.removeItem('procrm_voip_password')
+    localStorage.removeItem('procrm_voip_ip')
+}
+
+/**
  * Вставить форму
  */
 const innerForm = (error = null) => {
@@ -106,9 +213,9 @@ const innerForm = (error = null) => {
             ` : ''}
             <hr>
             <div class="form-group">
-                <label for="procrm-voip-ip">Введите IP</label>
+                <label for="procrm-voip-ip">Введите домен или ip сервера</label>
                 <input type="text" class="form-control" id="procrm-voip-ip" aria-describedby="procrmIpHelp" required>
-                <small id="procrmIpHelp" class="form-text text-muted">Введите ip сервера.</small>
+                <small id="procrmIpHelp" class="form-text text-muted">Введите домен или ip сервера.</small>
             </div>
             <div class="form-group">
                 <label for="procrm-voip-sip">Введите SIP</label>
@@ -165,21 +272,22 @@ const callInvite = async (phone) => {
 
     const inviter = new Inviter(window.procrm.userAgent, target, {});
     const loadingStatus = $('.procrm-voip-dropdown .procrm-voip-dial .status')
+    const btnCallEnd = $('#procrm-voip-call-cancel')
 
     inviter.stateChange.addListener((state) => {
         switch (state) {
             case SessionState.Initial:
                 loadingStatus.val('Подключение...')
-                $('.procrm-voip-call-cancel', document).click(() => callCancel(inviter))
+                btnCallEnd.click(() => callCancel(inviter))
                 break;
             case SessionState.Establishing:
                 loadingStatus.val('Подключение...')
-                $('.procrm-voip-call-cancel', document).click(() => callCancel(inviter))
+                btnCallEnd.click(() => callCancel(inviter))
                 break;
             case SessionState.Established:
                 loadingStatus.val('00:00')
                 setupRemoteMedia(inviter);
-                $('.procrm-voip-call-cancel', document).click(() => callEnd(inviter))
+                btnCallEnd.click(() => callEnd(inviter))
                 break;
             case SessionState.Terminating:
             // fall through
@@ -200,9 +308,20 @@ const callInvite = async (phone) => {
  * Вывод звонилки
  */
 const innerPhone = () => {
+    const sip = localStorage.getItem('procrm_voip_sip')
+
     $('.procrm-voip-dropdown').html(`
-        <div>
-            <h4>PROCRM VoIP</h4>
+        <div class="procrm-voip-phone">
+            <div class="header-call-phone">
+                <div class="info">
+                    <span class="text-muted">SIP:</span>
+                    <span class="sip">${sip}</span> 
+                    <span class="badge badge-success">Онлайн</span>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-secondary btn-sm" id="procrm_voip_logout"><i class="fa fa-power-off"/></button>
+                </div>
+            </div>
             <hr>
             <form id="procrm-voip-form-phone">
                 <div class="form-group">
@@ -210,8 +329,20 @@ const innerPhone = () => {
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Звонить</button>
             </form>
+            <hr>
+            <ul class="list-group">
+                <li class="list-group-item">Cras justo odio</li>
+                <li class="list-group-item">Dapibus ac facilisis in</li>
+                <li class="list-group-item">Morbi leo risus</li>
+            </ul>
         </div>
     `)
+
+    $('#procrm_voip_logout').click(async function (e) {
+        e.preventDefault()
+        clearAuthData()
+        await unregister()
+    })
 
     $('#procrm-voip-form-phone').submit(async function (e) {
         e.preventDefault()
@@ -239,7 +370,7 @@ const innerDial = ({phone}) => {
 }
 
 (async function () {
-    window.procrm = {userAgent: null}
+    window.procrm = {userAgent: null, registerer: null}
 
     // Init
     $('#header nav > ul.navbar-nav').append(`
@@ -264,7 +395,7 @@ const innerDial = ({phone}) => {
     const password = localStorage.getItem('procrm_voip_password')
     const ip = localStorage.getItem('procrm_voip_ip')
 
-    if(sip && ip && password) {
+    if (sip && ip && password) {
         await createUserAgent({login: sip, password, ip})
         innerPhone()
     } else
@@ -301,25 +432,6 @@ function cleanupMedia() {
         mediaElement.pause();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // function init_rel_tasks_table(rel_id, rel_type, selector) {

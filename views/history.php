@@ -6,55 +6,44 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-<!--                        <table class="procrm-voip-history-table">-->
-<!--                        </table>-->
-
-
-                        <div>
-                            <h1>Регистрация</h1>
-                            <div>
-                                <p>Статус: <b id="reg-status">Оффлайн</b></p>
-                                <div>
-                                    <label>
-                                        WebSocket Server IP <br/>
-                                        <input type="text" placeholder="WebSocket Server IP" id="ip">
-                                    </label>
-                                </div>
-                                <div>
-
-                                    <label>
-                                        SIP Login <br/>
-                                        <input type="text" placeholder="SIP Login" id="sip">
-                                    </label>
-                                </div>
-                                <div>
-                                    <label>
-                                        SIP Password <br/>
-                                        <input type="password" placeholder="SIP Password" id="password">
-                                    </label>
-                                </div>
-                                <br/>
-                                <div>
-                                    <button id="btnRegistration">Авторизация</button>
-                                    <button id="btnUnregister" disabled>Выход</button>
-                                </div>
+                        <h3 class="no-margin">История звонков</h3>
+                        <hr class="hr-panel-heading"/>
+                        <?php if(!isset($kerio)) { ?>
+                            <div class="alert alert-warning">
+                                <b>Требуется авторизация!</b> Перейдите в раздел VoIP Телефония -> <a href="<?php echo admin_url('procrm_voip/setting') ?>">Настройки</a> для авторизации.
                             </div>
-                        </div>
-                        <hr/>
-                        <div>
-                            <p>Статус: <b id="call-status">Оффлайн</b></p>
-                            <input type="tel" placeholder="SIP Number" id="targetNumber"/>
-                            <button id="btnCallInvite">Звонить</button>
-                            <button id="btnCallCancel" disabled>Сбросить</button>
-                        </div>
-                        <hr/>
-                        <div>
-                            <audio  id="remoteAudio" controls></audio>
-                        </div>
-                        <div>
-                            <audio  id="localAudio" muted="muted" controls></audio>
-                        </div>
-
+                        <?php } ?>
+                        <table class="table table-bordered table-hover table-responsive">
+                            <thead>
+                            <th>Тип</th>
+                            <th>Статус</th>
+                            <th>Номер</th>
+                            <th>Длительность</th>
+                            <th>Дата</th>
+                            <th></th>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($calls as $call) {?>
+                                    <tr>
+                                        <td><?php echo $call['type'] === 1 ? 'Входящий' : 'Исходящий' ?>
+                                        <i class="fa fa-arrow-down"></i>
+                                        <i class="fa fa-arrow-up"></i>
+                                        </td>
+                                        <td><?php echo procrm_voip_call_status($call['status']) ?></td>
+                                        <td><?php echo $call['toNum'] ?> (<?php echo $call['toName'] ? $call['toName'] : 'Неизвестно' ?>) <i class="fa fa-user-plus"></i>
+                                            <i class="fa fa-user"></i>
+                                        </td>
+                                        <td><?php echo $call['answeredDuration'] ?> / <?php echo $call['callDuration'] ?></td>
+                                        <td>
+                                            <?php echo date('H:i d-m-Y', $call['timestamp']) ?>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success"><i class="fa fa-phone"></i></button>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

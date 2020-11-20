@@ -18,13 +18,13 @@
 
 
 /** Звонилка **/
-.procrm-voip-phone .header-call-phone{
+.procrm-voip-phone .header-call-phone {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.procrm-voip-phone .header-call-phone .info{
+.procrm-voip-phone .header-call-phone .info {
     font-size: 20px;
 }
 
@@ -34,11 +34,11 @@
 
 
 /** Звонок **/
-.procrm-voip-dropdown .procrm-voip-dial{
+.procrm-voip-dropdown .procrm-voip-dial {
     text-align: center;
 }
 
-.procrm-voip-dropdown .procrm-voip-dial audio{
+.procrm-voip-dropdown .procrm-voip-dial audio {
     /*display: block;*/
     margin: 0 auto;
 }
@@ -49,15 +49,15 @@
     text-align: center;
 }
 
-.procrm-voip-dial-invite .title{
+.procrm-voip-dial-invite .title {
     margin-bottom: 2rem;
 }
 
-.procrm-voip-dial-invite .image{
+.procrm-voip-dial-invite .image {
     margin-bottom: 2rem;
 }
 
-.procrm-voip-dial-invite .image .client-profile-image-small{
+.procrm-voip-dial-invite .image .client-profile-image-small {
     height: 60px;
     width: 60px;
 }
@@ -68,4 +68,81 @@
 
 .procrm-voip-dial-invite .actions {
     margin-bottom: 0.5rem;
+}
+
+
+/***********************/
+.card-details-auth {
+    font-size: 16px;
+}
+
+.card-details-auth > div {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+}
+
+.card-details-auth > .item:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.card-details-auth > .actions {
+    display: flex;
+    margin-top: 2rem;
+}
+
+
+.procrm-voip-setting-sip {
+
+}
+
+.procrm-voip-setting-sip .item {
+    display: flex;
+    align-items: center;
+}
+
+.procrm-voip-setting-sip .item .title {
+    font-size: 20px;
+    margin-right: auto;
+    font-weight: bold;
+}
+
+.procrm-voip-setting-sip .item i.fa-phone-square {
+    margin-right: 2.5rem;
+    font-size: 30px;
+}
+
+.procrm-voip-setting-sip .item .action {
+}
+
+/**/
+.procrm-voip-contacts {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+@media (max-width: 992px) {
+    .procrm-voip-contacts {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.procrm-voip-contacts-card {
+    display: flex;
+    border: 1px solid #eee;
+    padding: 1rem;
+    align-items: center;
+}
+
+.procrm-voip-contacts-card .info {
+    margin-right: auto;
+}
+
+.procrm-voip-contacts-card .info .title {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.procrm-voip-contacts-card .info .tel {
+    font-size: 20px;
 }

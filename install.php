@@ -25,18 +25,35 @@ if (!$CI->db->table_exists(db_prefix() . 'procrm_voip_calls')) {
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT');
 }
 
-if (!$CI->db->table_exists(db_prefix() . 'procrm_voip_sip_staff')) {
-    $CI->db->query('CREATE TABLE `' . db_prefix() . "procrm_voip_sip_staff` (
+//if (!$CI->db->table_exists(db_prefix() . 'procrm_voip_sip_staff')) {
+//    $CI->db->query('CREATE TABLE `' . db_prefix() . "procrm_voip_sip_staff` (
+//  `id` int(11) NOT NULL,
+//  `staff_id` int(11) NOT NULL,
+//  `virtual_number` int(11) NOT NULL,
+//  `uri` varchar(100) NOT NULL,
+//  `password` varchar(150) NOT NULL
+//) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
+//
+//    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_sip_staff`
+//  ADD PRIMARY KEY (`id`);');
+//
+//    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_sip_staff`
+//  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT');
+//}
+
+
+if (!$CI->db->table_exists(db_prefix() . 'procrm_voip_kerio_staff')) {
+    $CI->db->query('CREATE TABLE `' . db_prefix() . "procrm_voip_kerio_staff` (
   `id` int(11) NOT NULL,
   `staff_id` int(11) NOT NULL,
-  `virtual_number` int(11) NOT NULL,
-  `uri` varchar(100) NOT NULL,
+  `domain` varchar(150) NOT NULL,
+  `login` varchar(150) NOT NULL,
   `password` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
 
-    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_sip_staff`
+    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_kerio_staff`
   ADD PRIMARY KEY (`id`);');
 
-    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_sip_staff`
+    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_kerio_staff`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT');
 }

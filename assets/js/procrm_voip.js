@@ -151,7 +151,7 @@ const createUserAgent = async ({login, ip, password, displayName = 'PROCRM WebRT
             authorizationUser: login,
             authorizationPassword: password,
             transportOptions: {
-                server: `wss://${ip}:8089/ws`,
+                server: `wss://${ip}:5080/ws`,
                 traceSip: false,
             },
             sessionDescriptionHandlerConfiguration: {
@@ -161,7 +161,7 @@ const createUserAgent = async ({login, ip, password, displayName = 'PROCRM WebRT
                 },
             },
             logBuiltinEnabled: true,
-            logConfiguration: true,
+            logConfiguration: false,
             delegate: {
                 onInvite,
                 onConnect,

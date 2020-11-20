@@ -28,34 +28,32 @@ function procrm_voip_menu_item_collapsible()
     $CI = &get_instance();
 
     $CI->app_menu->add_sidebar_menu_item('custom-menu-unique-id', [
-        'name'     => _l('voip_telephony'), // The name if the item
-        'collapse' => true, // Indicates that this item will have submitems
-        'position' => 10, // The menu position
-        'icon'     => 'fa fa-phone', // Font awesome icon
+        'name' => _l('voip_telephony'),
+        'collapse' => true,
+        'position' => 10,
+        'icon' => 'fa fa-phone',
     ]);
 
-    // The first paremeter is the parent menu ID/Slug
     $CI->app_menu->add_sidebar_children_item('custom-menu-unique-id', [
-        'slug'     => 'child-to-custom-menu-item', // Required ID/slug UNIQUE for the child menu
-        'name'     => _l('call_history'), // The name if the item
-        'href'     => '/procrm_voip/history', // URL of the item
-        'position' => 5, // The menu position
-        'icon'     => 'fa fa-history', // Font awesome icon
+        'slug' => 'procrm_voip_sub_menu_history',
+        'name' => _l('call_history'),
+        'href' => admin_url('procrm_voip/history'),
+        'position' => 5,
+        'icon' => 'fa fa-history',
     ]);
 
-    // The first paremeter is the parent menu ID/Slug
     $CI->app_menu->add_sidebar_children_item('custom-menu-unique-id', [
-        'slug'     => 'child-to-custom-menu-item', // Required ID/slug UNIQUE for the child menu
-        'name'     => _l('settings'), // The name if the item
-        'href'     => '/procrm_voip/setting', // URL of the item
-        'position' => 5, // The menu position
-        'icon'     => 'fa fa-cog', // Font awesome icon
+        'slug' => 'procrm_voip_sub_menu_setting',
+        'name' => _l('settings'),
+        'href' => admin_url('procrm_voip/setting'),
+        'position' => 5,
+        'icon' => 'fa fa-cog',
     ]);
 }
 
 
 /**
- * Register activation module hook
+ * Зарегистрировать hook модуля активации
  */
 register_activation_hook(PROCRM_VOIP_MODULE_NAME, 'procrm_voip_module_activation_hook');
 
@@ -66,13 +64,12 @@ function procrm_voip_module_activation_hook()
 }
 
 /**
- * Register language files, must be registered if the module is using languages
+ * Зарегистрируйте языковые файлы, необходимо зарегистрировать, если модуль использует языки
  */
 register_language_files(PROCRM_VOIP_MODULE_NAME, [PROCRM_VOIP_MODULE_NAME]);
 
 
-
 /**
- * Load the procrm voip helper
+ * Загрузите помощник procrm voip
  */
 $CI->load->helper(PROCRM_VOIP_MODULE_NAME . '/procrm_voip');

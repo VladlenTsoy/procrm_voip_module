@@ -18,6 +18,9 @@ class History extends AdminController
         $this->load->model('leads_model');
     }
 
+    /**
+     * История звонков
+     */
     public function index()
     {
         $staffId = get_staff_user_id();
@@ -30,8 +33,8 @@ class History extends AdminController
         ];
 
         if ($kerioStaff) {
-            $responseContacts = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getAddressBook', []);
             $resCallHistory = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserCallHistory.get', ['timeStartMax' => 0, 'limit' => 100]);
+            $responseContacts = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getAddressBook', []);
 
             $data['kerio'] = $kerioStaff;
             $data['calls'] = isset($resCallHistory['result']['callHistory']) ? $resCallHistory['result']['callHistory'] : [];
@@ -40,30 +43,12 @@ class History extends AdminController
                 $tmpCalls = [];
                 foreach ($data['calls'] as $key => $call) {
                     if ($call['toNum']) {
-                        $leads = [];
+                        $lead = $this->_findLead($call['toNum']);
 
-                        if (strlen($call['toNum']) > 9 || strlen($call['toNum']) === 9) {
-                            $toTel = strlen($call['toNum']) > 9 ? substr($call['toNum'], -9) : $call['toNum'];
-                            $leads = $this->leads_model->get(null, "phonenumber LIKE '%" . $toTel . "%'");
-                        }
-
-                        if (count($leads))
-                            $call['lead'] = isset($leads[0]) ? [
-                                'id' => $leads[0]['id'],
-                                'name' => $leads[0]['name'],
-                            ] : null;
-                        else if (isset($responseContacts['result']['addressBook'])) {
-                            $tmp = null;
-                            foreach ($responseContacts['result']['addressBook'] as $contact) {
-                                foreach ($contact['numbers'] as $number) {
-                                    if ($number['telNum'] === $call['toNum'])
-                                        $tmp = [
-                                            'name' => $contact['fullName']
-                                        ];
-                                }
-                            }
-                            $call['kerio_contact'] = $tmp;
-                        }
+                        if ($lead)
+                            $call['lead'] = $lead;
+                        else
+                            $call['kerio_contact'] = $this->_findKerioContact($responseContacts, $call['toNum']);
 
                         array_push($tmpCalls, $call);
                     }
@@ -74,5 +59,46 @@ class History extends AdminController
         }
 
         $this->load->view('history', $data);
+    }
+
+    /**
+     * Поиск лида по телефону
+     * @param $tel
+     * @return array|null
+     */
+    protected function _findLead($tel)
+    {
+        $leads = [];
+
+        if (strlen($tel) > 9 || strlen($tel) === 9) {
+            $toTel = strlen($tel) > 9 ? substr($tel, -9) : $tel;
+            $leads = $this->leads_model->get(null, "phonenumber LIKE '%" . $toTel . "%'");
+        }
+
+        return count($leads) && isset($leads[0]) ? [
+            'id' => $leads[0]['id'],
+            'name' => $leads[0]['name'],
+        ] : null;
+    }
+
+    /**
+     * Поиск контакта из керио
+     * @param $contacts
+     * @param $tel
+     * @return array|null
+     */
+    protected function _findKerioContact($contacts, $tel)
+    {
+        $tmp = null;
+        if (isset($contacts['result']['addressBook'])) {
+            foreach ($contacts['result']['addressBook'] as $contact) {
+                foreach ($contact['numbers'] as $number) {
+                    if ($number['telNum'] === $tel)
+                        $tmp = ['name' => $contact['fullName']];
+                }
+            }
+        }
+
+        return $tmp;
     }
 }

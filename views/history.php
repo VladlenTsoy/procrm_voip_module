@@ -30,7 +30,7 @@
                             <?php foreach ($calls as $call) { ?>
                                 <tr>
                                     <td>
-                                        <?php echo $call['type'] === 1 ? '<i class="fa fa-arrow-down"></i>' : '<i class="fa fa-arrow-up"></i>' ?>
+                                        <?php echo $call['type'] === 1 ? '<i class="fa fa-arrow-down text-success"></i>' : '<i class="fa fa-arrow-up text-danger"></i>' ?>
                                         <?php echo $call['type'] === 1 ? 'Входящий' : 'Исходящий' ?>
                                     </td>
                                     <td><?php echo procrm_voip_call_status($call['status']) ?></td>
@@ -65,6 +65,7 @@
     </div>
 </div>
 <?php init_tail(); ?>
+<link href="<?php echo module_dir_url('procrm_voip', 'assets/css/procrm_voip_history.css'); ?>" rel="stylesheet">
 <script src="<?php echo module_dir_url('procrm_voip', 'assets/js/procrm_voip_history.js'); ?>"></script>
 </body>
 </html>

@@ -1,3 +1,7 @@
+/**
+ * Переотправка вызова на SIP
+ * @param toNum
+ */
 function dial({toNum}) {
     $.ajax({
         type: 'post',
@@ -7,22 +11,17 @@ function dial({toNum}) {
         },
         url: admin_url + '/procrm_voip/setting/dial',
         success: function (response) {
-            $.ajax({
-                type: 'post',
-                dataType: 'json',
-                url: admin_url + '/procrm_voip/setting/status',
-                data: {
-                    callId: response.result.callId
-                }
-            })
+            console.log(response)
         },
-        error: function (error) {
-            console.log(error)
+        error: function (e) {
+            console.error(e)
         }
     })
 }
 
+/** Слушать клик на href-tel и выполнять вызов **/
 $(document).on('click', 'a[href^="tel:"]', function (e) {
     e.preventDefault()
-    dial({toNum: 903192933})
+    const tel = e.target.href.replace('tel:', '');
+    dial({toNum: tel})
 })

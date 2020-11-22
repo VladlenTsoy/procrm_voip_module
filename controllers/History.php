@@ -37,31 +37,40 @@ class History extends AdminController
             $data['calls'] = isset($resCallHistory['result']['callHistory']) ? $resCallHistory['result']['callHistory'] : [];
 
             if (count($data['calls'])) {
+                $tmpCalls = [];
                 foreach ($data['calls'] as $key => $call) {
-                    $leads = $this->leads_model->get(null, "phonenumber LIKE '%" . $call['toNum'] . "%'");
+                    if ($call['toNum']) {
+                        $leads = [];
 
-                    if (count($leads)) {
-                        $call['lead'] = isset($leads[0]) ? [
-                            'id' => $leads[0]['id'],
-                            'name' => $leads[0]['name'],
-                        ] : null;
-                    } else if(isset($responseContacts['result']['addressBook'])) {
-                        $tmp = null;
-                        foreach ($responseContacts['result']['addressBook'] as $contact) {
-                            foreach ($contact['numbers'] as $number) {
-                                if($number['telNum'] === $call['toNum']) {
-                                    $tmp = [
-                                        'name' => $contact['fullName']
-                                    ];
+                        if (strlen($call['toNum']) > 9 || strlen($call['toNum']) === 9) {
+                            $toTel = strlen($call['toNum']) > 9 ? substr($call['toNum'], -9) : $call['toNum'];
+                            $leads = $this->leads_model->get(null, "phonenumber LIKE '%" . $toTel . "%'");
+                        }
+
+                        if (count($leads))
+                            $call['lead'] = isset($leads[0]) ? [
+                                'id' => $leads[0]['id'],
+                                'name' => $leads[0]['name'],
+                            ] : null;
+                        else if (isset($responseContacts['result']['addressBook'])) {
+                            $tmp = null;
+                            foreach ($responseContacts['result']['addressBook'] as $contact) {
+                                foreach ($contact['numbers'] as $number) {
+                                    if ($number['telNum'] === $call['toNum'])
+                                        $tmp = [
+                                            'name' => $contact['fullName']
+                                        ];
                                 }
                             }
+                            $call['kerio_contact'] = $tmp;
                         }
-                        $call['kerio_contact'] = $tmp;
-                    }
 
-                    $data['calls'][$key] = $call;
+                        array_push($tmpCalls, $call);
+                    }
                 }
             }
+
+            $data['calls'] = $tmpCalls;
         }
 
         $this->load->view('history', $data);

@@ -15,6 +15,7 @@ class History extends AdminController
         parent::__construct();
         $this->kerioApi = new KerioOperatorApi();
         $this->load->model('Procrm_voip_kerio_staff_model', 'kerio_staff_model');
+        $this->load->model('leads_model');
     }
 
     public function index()
@@ -29,10 +30,38 @@ class History extends AdminController
         ];
 
         if ($kerioStaff) {
-            $response = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserCallHistory.get', ['timeStartMax' => 0, 'limit' => 100]);
+            $responseContacts = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getAddressBook', []);
+            $resCallHistory = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserCallHistory.get', ['timeStartMax' => 0, 'limit' => 100]);
 
             $data['kerio'] = $kerioStaff;
-            $data['calls'] = isset($response['result']['callHistory']) ? $response['result']['callHistory'] : [];
+            $data['calls'] = isset($resCallHistory['result']['callHistory']) ? $resCallHistory['result']['callHistory'] : [];
+
+            if (count($data['calls'])) {
+                foreach ($data['calls'] as $key => $call) {
+                    $leads = $this->leads_model->get(null, "phonenumber LIKE '%" . $call['toNum'] . "%'");
+
+                    if (count($leads)) {
+                        $call['lead'] = isset($leads[0]) ? [
+                            'id' => $leads[0]['id'],
+                            'name' => $leads[0]['name'],
+                        ] : null;
+                    } else if(isset($responseContacts['result']['addressBook'])) {
+                        $tmp = null;
+                        foreach ($responseContacts['result']['addressBook'] as $contact) {
+                            foreach ($contact['numbers'] as $number) {
+                                if($number['telNum'] === $call['toNum']) {
+                                    $tmp = [
+                                        'name' => $contact['fullName']
+                                    ];
+                                }
+                            }
+                        }
+                        $call['kerio_contact'] = $tmp;
+                    }
+
+                    $data['calls'][$key] = $call;
+                }
+            }
         }
 
         $this->load->view('history', $data);

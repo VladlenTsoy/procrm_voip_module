@@ -21,6 +21,9 @@
                                     <div class="item"><b class="text-muted">Статус:</b>
                                         <div><span class="badge badge-success">Подключен</span></div>
                                     </div>
+                                    <div class="item"><b class="text-muted">Доступ:</b>
+                                        <div><span class="badge">Оператор</span></div>
+                                    </div>
                                     <div class="actions">
                                         <a
                                                 class="btn btn-default btn-block"
@@ -41,7 +44,10 @@
                                             <div class="title">
                                                 <?php echo preg_replace('/\D/', '', $extension['username']) ?>
                                             </div>
-                                            <button class="btn btn-default"><i class="fa fa-sign-in"></i> Войти</button>
+                                            <div class="status">
+                                                <span class="badge">Оффлайн</span>
+                                            </div>
+                                            <button class="btn btn-default btn-sm" onclick="startWebrtc('<?php echo $extension['username']?>')"><i class="fa fa-sign-in"></i> Войти</button>
                                         </div>
                                     <?php } ?>
                                 </div>
@@ -52,15 +58,18 @@
                                         <div class="procrm-voip-contacts-card">
                                             <div class="info">
                                                 <div class="title"><?php echo $contact['fullName'] ?></div>
-                                                <div class="tel"><?php echo $contact['numbers'][0]['telNum'] ?></div>
                                             </div>
-                                            <div>
-                                                <a class="btn btn-success" href="tel:<?php echo $contact['numbers'][0]['telNum'] ?>"><i class="fa fa-phone"></i></a>
+                                            <div class="numbers">
+                                                <?php foreach ($contact['numbers'] as $number) { ?>
+                                                    <div class="number">
+                                                        <div class="tel"><?php echo $number['telNum'] ?></div>
+                                                        <a class="btn btn-success btn-sm" href="tel:<?php echo $number['telNum'] ?>"><i class="fa fa-phone"></i></a>
+                                                    </div>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     <?php } ?>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -70,5 +79,6 @@
     </div>
 </div>
 <?php init_tail(); ?>
+<script src="<?php echo module_dir_url('procrm_voip', 'assets/js/procrm_voip_kerio.js'); ?>"></script>
 </body>
 </html>

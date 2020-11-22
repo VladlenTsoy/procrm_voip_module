@@ -100,10 +100,18 @@
     align-items: center;
 }
 
+.procrm-voip-setting-sip .item:not(:last-child) {
+    margin-bottom: 1.5rem;
+}
+
 .procrm-voip-setting-sip .item .title {
     font-size: 20px;
     margin-right: auto;
     font-weight: bold;
+}
+
+.procrm-voip-setting-sip .item .status {
+    margin-right: auto;
 }
 
 .procrm-voip-setting-sip .item i.fa-phone-square {
@@ -128,7 +136,6 @@
 }
 
 .procrm-voip-contacts-card {
-    display: flex;
     border: 1px solid #eee;
     padding: 1rem;
     align-items: center;
@@ -143,6 +150,16 @@
     margin-bottom: 0.25rem;
 }
 
-.procrm-voip-contacts-card .info .tel {
+.procrm-voip-contacts-card .number {
+    display: flex;
+    align-items: center;
+}
+
+.procrm-voip-contacts-card .number:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.procrm-voip-contacts-card .number .tel {
     font-size: 20px;
+    margin-right: auto;
 }

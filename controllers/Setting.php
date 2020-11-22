@@ -113,6 +113,11 @@ class Setting extends AdminController
         $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
 
         $response = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getWebrtc', []);
-        echo json_decode($response);
+
+        $data = [
+            'token' => $this->kerioApi->token,
+            'webrtc' => $response['result']
+        ];
+        echo json_encode($data);
     }
 }

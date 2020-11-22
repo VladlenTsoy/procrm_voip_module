@@ -98,7 +98,6 @@ const onNotify = (e) => {
  * @param invitation
  */
 const onInvite = function (invitation) {
-    alert(1)
     innerDialInvite()
     invitation.stateChange.addListener((state) => {
         switch (state) {
@@ -160,7 +159,7 @@ const createUserAgent = async ({login, ip, password, displayName = 'PROCRM WebRT
                     video: false
                 },
             },
-            logBuiltinEnabled: true,
+            logBuiltinEnabled: false,
             logConfiguration: false,
             delegate: {
                 onInvite,
@@ -433,29 +432,3 @@ function cleanupMedia() {
     }
 }
 
-
-// function init_rel_tasks_table(rel_id, rel_type, selector) {
-//     if (typeof(selector) == 'undefined') { selector = '.procrm-voip-history-table'; }
-//     var $selector = $("body").find(selector);
-//     if ($selector.length === 0) { return; }
-//
-//     var TasksServerParams = {},
-//         tasksRelationTableNotSortable = [0], // bulk actions
-//         TasksFilters;
-//
-//     TasksFilters = $('body').find('._hidden_inputs._filters._tasks_filters input');
-//
-//     $.each(TasksFilters, function() {
-//         TasksServerParams[$(this).attr('name')] = '[name="' + $(this).attr('name') + '"]';
-//     });
-//
-//     var url = admin_url + 'tasks/init_relation_tasks/' + rel_id + '/' + rel_type;
-//
-//     if ($selector.attr('data-new-rel-type') == 'project') {
-//         url += '?bulk_actions=true';
-//     }
-//
-//     initDataTable($selector, url, tasksRelationTableNotSortable, tasksRelationTableNotSortable, TasksServerParams, [$selector.find('th.duedate').index(), 'asc']);
-// }
-//
-// init_rel_tasks_table(1, 'customer')

@@ -1,22 +1,3 @@
-.procrm-voip-dropdown {
-    padding: 1rem;
-}
-
-/** Загрузка **/
-.procrm-voip-dropdown .loading {
-    text-align: center;
-}
-
-.procrm-voip-dropdown .loading i.fa {
-    font-size: 60px;
-}
-
-.procrm-voip-dropdown .loading span {
-    display: block;
-    margin-top: 1rem;
-}
-
-
 /** Звонилка **/
 .procrm-voip-phone .header-call-phone {
     display: flex;

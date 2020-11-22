@@ -28,7 +28,7 @@ const registration = async (userAgent) => {
                 innerPhone()
                 break
             case RegistererState.Terminated:
-                innerForm('Ошибка при соединении!')
+                alert_float('danger', 'Ошибка при соединении!')
                 break
             case RegistererState.Unregistered:
                 innerForm()
@@ -173,7 +173,7 @@ const createUserAgent = async ({login, ip, password, displayName = 'PROCRM WebRT
         await window.procrm.userAgent.start()
         await registration(window.procrm.userAgent)
     } catch (e) {
-        innerForm('Недействительный ip-адрес!')
+        alert_float('danger', 'Недействительный ip-адрес!')
     }
 }
 
@@ -203,43 +203,18 @@ const clearAuthData = () => {
  */
 const innerForm = (error = null) => {
     $('.procrm-voip-dropdown').html(`
-        <form id="procrm-voip-form-auth">
-            <h4>Авторизация PROCRM VoIP</h4>
-            ${error ? `
-                <div class="alert alert-danger" role="alert">
-                    ${error}
-                </div>
-            ` : ''}
-            <hr>
-            <div class="form-group">
-                <label for="procrm-voip-ip">Введите домен или ip сервера</label>
-                <input type="text" class="form-control" id="procrm-voip-ip" aria-describedby="procrmIpHelp" required>
-                <small id="procrmIpHelp" class="form-text text-muted">Введите домен или ip сервера.</small>
-            </div>
-            <div class="form-group">
-                <label for="procrm-voip-sip">Введите SIP</label>
-                <input type="text" class="form-control" id="procrm-voip-sip" aria-describedby="procrmSipHelp" required>
-                <small id="procrmSipHelp" class="form-text text-muted">Введите ваш внутренний номер.</small>
-            </div>
-            <div class="form-group">
-                <label for="procrm-voip-password">Введите Пароль</label>
-                <input type="password" class="form-control" id="procrm-voip-password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Авторизация</button>
-        </form>
+        <div class="procrm-voip-dropdown-auth">
+            <h4>
+                SIP - Аккаунт не подключен
+            </h4>
+            <ul>
+                <p>Для подключения SIP - Номера</p> 
+                <li>Перейдите VoIP Телефония -> <a href="${admin_url}procrm_voip/setting">Настройки</a></li>
+                <li>Если вы не авторизованы, авторизуйтесь</li>
+                <li>Выберите sip - аккаунт нажав на войти</li>
+            </ul>
+        </div>
     `)
-
-    $('#procrm-voip-form-auth').submit(async function (e) {
-        e.preventDefault()
-        const ip = $('#procrm-voip-ip').val()
-        const sip = $('#procrm-voip-sip').val()
-        const password = $('#procrm-voip-password').val()
-
-        $('.procrm-voip-dropdown').html(loadingBlock)
-
-        saveAuthData({sip, password, ip})
-        await createUserAgent({login: sip, password, ip})
-    })
 }
 
 /**

@@ -201,17 +201,17 @@ const clearAuthData = () => {
 /**
  * Вставить форму
  */
-const innerForm = (error = null) => {
+const innerForm = () => {
     $('.procrm-voip-dropdown').html(`
         <div class="procrm-voip-dropdown-auth">
             <h4>
-                SIP - Аккаунт не подключен
+                WebRTC - Аккаунт не подключен
             </h4>
             <ul>
-                <p>Для подключения SIP - Номера</p> 
+                <p>Для подключения WebRTC - Номера</p> 
                 <li>Перейдите VoIP Телефония -> <a href="${admin_url}procrm_voip/setting">Настройки</a></li>
                 <li>Если вы не авторизованы, авторизуйтесь</li>
-                <li>Выберите sip - аккаунт нажав на войти</li>
+                <li>Выберите WebRTC - аккаунт нажав на войти</li>
             </ul>
         </div>
     `)

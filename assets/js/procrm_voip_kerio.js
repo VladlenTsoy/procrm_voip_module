@@ -9,7 +9,7 @@ function startWebrtc(sip) {
             Cookies.set('TOKEN_OPERATOR_CLIENT', response.token)
 
 
-            dial()
+            // dial()
             console.log(response)
 
             // $('#top-procrm-voip').dropdown('show')
@@ -25,16 +25,3 @@ function startWebrtc(sip) {
 }
 
 
-function dial() {
-    $.ajax({
-        type: 'post',
-        dataType: 'json',
-        url: admin_url + '/procrm_voip/setting/dial',
-        success: function(response) {
-            console.log(response)
-        },
-        error: function (error) {
-            console.log(error)
-        }
-    })
-}

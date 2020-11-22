@@ -1,0 +1,86 @@
+/** WebRTC dropdown **/
+.procrm-voip-dropdown {
+    padding: 1rem;
+}
+
+/** Загрузка **/
+.procrm-voip-dropdown .loading {
+    text-align: center;
+}
+
+.procrm-voip-dropdown .loading i.fa {
+    font-size: 60px;
+}
+
+.procrm-voip-dropdown .loading span {
+    display: block;
+    margin-top: 1rem;
+}
+
+
+/** Сообщение об авторизации **/
+.procrm-voip-dropdown-auth {
+    padding: 1rem 2rem;
+}
+
+.procrm-voip-dropdown-auth ul {
+    margin-top: 2rem;
+}
+
+.procrm-voip-dropdown-auth ul li {
+    margin-left: 1rem;
+}
+
+.procrm-voip-dropdown-auth ul li:not(:last-child) {
+    margin-bottom: 0.5rem;
+}
+
+/** Звонилка **/
+.procrm-voip-phone .header-call-phone {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.procrm-voip-phone .header-call-phone .info {
+    font-size: 20px;
+}
+
+
+
+/** Звонок **/
+.procrm-voip-dropdown .procrm-voip-dial {
+    text-align: center;
+}
+
+.procrm-voip-dropdown .procrm-voip-dial audio {
+    /*display: block;*/
+    margin: 0 auto;
+}
+
+
+/** Входящий звонок **/
+.procrm-voip-dial-invite {
+    text-align: center;
+}
+
+.procrm-voip-dial-invite .title {
+    margin-bottom: 2rem;
+}
+
+.procrm-voip-dial-invite .image {
+    margin-bottom: 2rem;
+}
+
+.procrm-voip-dial-invite .image .client-profile-image-small {
+    height: 60px;
+    width: 60px;
+}
+
+.procrm-voip-dial-invite .name {
+    margin-bottom: 2rem;
+}
+
+.procrm-voip-dial-invite .actions {
+    margin-bottom: 0.5rem;
+}

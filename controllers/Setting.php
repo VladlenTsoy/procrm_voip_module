@@ -48,11 +48,13 @@ class Setting extends AdminController
     {
         $responseWebrtc = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getWebrtc', []);
         $responseContacts = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getAddressBook', []);
+        $responseUserSetting = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserSettings.get', []);
 
         $data = [
             'title' => 'Настройка PROCRM VoIP',
             'kerio' => $kerioStaff,
             'webrtc' => $responseWebrtc['result'],
+            'userSetting' => $responseUserSetting['result'],
             'contacts' => $responseContacts['result'],
         ];
 
@@ -106,6 +108,34 @@ class Setting extends AdminController
     }
 
     /**
+     * Отправить звонок
+     */
+    public function dial()
+    {
+        $data = $this->input->post();
+
+        $staffId = get_staff_user_id();
+        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+
+        $response = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.dial', ['extensionGuid' => 32, 'toNum' => $data['toNum']]);
+        echo json_encode($response);
+    }
+
+    /**
+     * Завершить звонок
+     */
+    public function hangup()
+    {
+        $data = $this->input->post();
+
+        $staffId = get_staff_user_id();
+        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+
+        $response = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.hangup', ['callId' => $data['callId']]);
+        echo json_encode($response);
+    }
+
+    /**
      *
      */
     public function webrtcDetails()
@@ -113,37 +143,21 @@ class Setting extends AdminController
         $staffId = get_staff_user_id();
         $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
 
-        $responseBatch = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'Batch.run', [
-            'commandList' => [
-                ['method' => 'Session.getSettings', 'params' => ['query' => [["myphone"], ["shared"]]]],
-                ['method' => 'Session.whoAmI'],
-                ['method' => 'UserSettings.get'],
-                ['method' => 'Session.getUserTicket'],
-            ]
-        ]);
         $responseWebrtc = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getWebrtc', []);
+        $responseGetUserTicket = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'Session.getUserTicket', []);
+        $responseUserSetting = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserSettings.get', []);
         $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.initializeEvents', []);
         $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.acquireWebrtc', []);
-
 
         $last = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'Session.setSettings', ['settings' => ['myphone' => ['lastUsedExtensionGuid' => 32]]]);
 
         $data = [
             'token' => $this->kerioApi->token,
-            'batch' => $responseBatch['result'],
+            'userSetting' => $responseUserSetting['result'],
+            'getUserTicket' => $responseGetUserTicket['result'],
             'webrtc' => $responseWebrtc['result'],
             'last' => $last['result'],
         ];
         echo json_encode($data);
-    }
-
-
-    public function dial()
-    {
-        $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
-
-        $response = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.dial', ['extensionGuid' => 32, 'toNum' => "903192933"]);
-        echo json_encode($response);
     }
 }

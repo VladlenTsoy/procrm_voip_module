@@ -24,7 +24,7 @@ if (staff_can('view', PROCRM_VOIP_MODULE_NAME)) {
 function procrm_voip_add_head_components()
 {
     echo '<link href="' . module_dir_url('procrm_voip', 'assets/css/procrm_voip.css' . '?v=' . PROCRM_VOIP_VERSIONING . '') . '"  rel="stylesheet" type="text/css" />';
-    echo '<link href="' . module_dir_url('procrm_voip', 'assets/css/procrm_voip_dropdown.css' . '?v=' . PROCRM_VOIP_VERSIONING . '') . '"  rel="stylesheet" type="text/css" />';
+    echo '<link href="' . module_dir_url('procrm_voip', 'assets/css/dropdown/procrm_voip_dropdown.css' . '?v=' . PROCRM_VOIP_VERSIONING . '') . '"  rel="stylesheet" type="text/css" />';
 }
 
 

@@ -36,18 +36,41 @@
                                 <!---->
                                 <hr/>
                                 <!---->
-                                <h4 class="text-muted">SIP - аккаунты</h4>
+                                <h4 class="text-muted">WebRTC - аккаунты</h4>
                                 <div class="procrm-voip-setting-sip">
                                     <?php foreach ($webrtc['extensions'] as $extension) { ?>
                                         <div class="item">
                                             <i class="fa fa-phone-square text-muted"></i>
                                             <div class="title">
-                                                <?php echo preg_replace('/\D/', '', $extension['username']) ?>
-                                            </div>
-                                            <div class="status">
-                                                <span class="badge">Оффлайн</span>
+                                                <?php echo $extension['username'] ?>
                                             </div>
                                             <button class="btn btn-default btn-sm" onclick="startWebrtc('<?php echo $extension['username']?>')"><i class="fa fa-sign-in"></i> Войти</button>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                                <!---->
+                                <hr/>
+                                <!---->
+                                <h4 class="text-muted">SIP - аккаунты</h4>
+                                <div class="procrm-voip-setting-sip">
+                                    <?php foreach ($userSetting['lines'] as $line) { ?>
+                                        <div class="item">
+                                            <?php if($line['sipStatus']['registered']) { ?>
+                                            <i class="fa fa-phone-square text-primary"></i>
+                                            <?php } else { ?>
+                                                <i class="fa fa-phone-square text-muted"></i>
+                                            <?php } ?>
+                                            <div class="title">
+                                                <?php echo $line['telNum'] ?><br>
+                                                <small class="text-muted"><?php echo $line['sipStatus']['userAgent'] ?></small>
+                                            </div>
+                                            <div class="status">
+                                                <?php if($line['sipStatus']['registered']) { ?>
+                                                <span class="badge badge-success">Онлайн</span>
+                                                <?php } else { ?>
+                                                <span class="badge">Оффлайн</span>
+                                                <?php } ?>
+                                            </div>
                                         </div>
                                     <?php } ?>
                                 </div>
@@ -79,6 +102,7 @@
     </div>
 </div>
 <?php init_tail(); ?>
+<link href="<?php echo module_dir_url('procrm_voip', 'assets/css/procrm_voip_setting_details.css'); ?>" rel="stylesheet">
 <script src="<?php echo module_dir_url('procrm_voip', 'assets/js/procrm_voip_kerio.js'); ?>"></script>
 </body>
 </html>

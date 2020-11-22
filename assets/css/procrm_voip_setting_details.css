@@ -1,0 +1,92 @@
+/** Информация о авторизации **/
+.card-details-auth {
+    font-size: 16px;
+}
+
+.card-details-auth > div {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+}
+
+.card-details-auth > .item:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.card-details-auth > .actions {
+    display: flex;
+    margin-top: 2rem;
+}
+
+/** Настройка левого меню WebRTC и SIP аккаунтов **/
+.procrm-voip-setting-sip {
+}
+
+.procrm-voip-setting-sip .item {
+    display: flex;
+    align-items: center;
+}
+
+.procrm-voip-setting-sip .item:not(:last-child) {
+    margin-bottom: 1.5rem;
+}
+
+.procrm-voip-setting-sip .item .title {
+    font-size: 16px;
+    line-height: 14px;
+    margin-right: auto;
+    font-weight: bold;
+}
+
+.procrm-voip-setting-sip .item .status {
+    margin-right: auto;
+}
+
+.procrm-voip-setting-sip .item i.fa-phone-square {
+    margin-right: 2.5rem;
+    font-size: 30px;
+}
+
+.procrm-voip-setting-sip .item .action {
+}
+
+/** Контакты внутренних номеров **/
+.procrm-voip-contacts {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+@media (max-width: 992px) {
+    .procrm-voip-contacts {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.procrm-voip-contacts .procrm-voip-contacts-card {
+    border: 1px solid #eee;
+    padding: 1rem;
+    align-items: center;
+}
+
+.procrm-voip-contacts .procrm-voip-contacts-card .info {
+    margin-right: auto;
+}
+
+.procrm-voip-contacts .procrm-voip-contacts-card .info .title {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.procrm-voip-contacts .procrm-voip-contacts-card .number {
+    display: flex;
+    align-items: center;
+}
+
+.procrm-voip-contacts .procrm-voip-contacts-card .number:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.procrm-voip-contacts .procrm-voip-contacts-card .number .tel {
+    font-size: 20px;
+    margin-right: auto;
+}

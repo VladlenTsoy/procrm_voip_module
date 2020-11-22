@@ -44,7 +44,7 @@
                                             <div class="title">
                                                 <?php echo $extension['username'] ?>
                                             </div>
-                                            <button class="btn btn-default btn-sm" onclick="startWebrtc('<?php echo $extension['username']?>')"><i class="fa fa-sign-in"></i> Войти</button>
+                                            <button class="btn btn-default btn-sm btn-auth-webrtc" data-username="<?php echo $extension['username']?>"><i class="fa fa-sign-in"></i> Войти</button>
                                         </div>
                                     <?php } ?>
                                 </div>
@@ -103,6 +103,6 @@
 </div>
 <?php init_tail(); ?>
 <link href="<?php echo module_dir_url('procrm_voip', 'assets/css/procrm_voip_setting_details.css'); ?>" rel="stylesheet">
-<script src="<?php echo module_dir_url('procrm_voip', 'assets/js/procrm_voip_kerio.js'); ?>"></script>
+<script src="<?php echo module_dir_url('procrm_voip', 'assets/js/procrm_voip_details.js'); ?>"></script>
 </body>
 </html>

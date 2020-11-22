@@ -22,6 +22,6 @@ function dial({toNum}) {
 /** Слушать клик на href-tel и выполнять вызов **/
 $(document).on('click', 'a[href^="tel:"]', function (e) {
     e.preventDefault()
-    const tel = e.target.href.replace('tel:', '');
+    const tel = e.currentTarget.href.replace('tel:', '');
     dial({toNum: tel})
 })

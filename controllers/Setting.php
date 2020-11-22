@@ -108,16 +108,42 @@ class Setting extends AdminController
     /**
      *
      */
-    public function webrtcDetails () {
+    public function webrtcDetails()
+    {
         $staffId = get_staff_user_id();
         $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
 
-        $response = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getWebrtc', []);
+        $responseBatch = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'Batch.run', [
+            'commandList' => [
+                ['method' => 'Session.getSettings', 'params' => ['query' => [["myphone"], ["shared"]]]],
+                ['method' => 'Session.whoAmI'],
+                ['method' => 'UserSettings.get'],
+                ['method' => 'Session.getUserTicket'],
+            ]
+        ]);
+        $responseWebrtc = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getWebrtc', []);
+        $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.initializeEvents', []);
+        $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.acquireWebrtc', []);
+
+
+        $last = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'Session.setSettings', ['settings' => ['myphone' => ['lastUsedExtensionGuid' => 32]]]);
 
         $data = [
             'token' => $this->kerioApi->token,
-            'webrtc' => $response['result']
+            'batch' => $responseBatch['result'],
+            'webrtc' => $responseWebrtc['result'],
+            'last' => $last['result'],
         ];
         echo json_encode($data);
+    }
+
+
+    public function dial()
+    {
+        $staffId = get_staff_user_id();
+        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+
+        $response = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.dial', ['extensionGuid' => 32, 'toNum' => "903192933"]);
+        echo json_encode($response);
     }
 }

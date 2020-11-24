@@ -150,7 +150,7 @@ const createUserAgent = async ({login, ip, password, displayName = 'PROCRM WebRT
             authorizationUser: login,
             authorizationPassword: password,
             transportOptions: {
-                server: `wss://${ip}/ws`,
+                server: `wss://${ip}:8089/ws`,
                 traceSip: false,
             },
             sessionDescriptionHandlerConfiguration: {
@@ -159,8 +159,8 @@ const createUserAgent = async ({login, ip, password, displayName = 'PROCRM WebRT
                     video: false
                 },
             },
-            logBuiltinEnabled: false,
-            logConfiguration: false,
+            logBuiltinEnabled: true,
+            logConfiguration: true,
             delegate: {
                 onInvite,
                 onConnect,
@@ -370,7 +370,7 @@ const innerDial = ({phone}) => {
     const ip = localStorage.getItem('procrm_voip_ip')
 
     if (sip && ip && password) {
-        await createUserAgent({login: sip, password, ip})
+        // await createUserAgent({login: sip, password, ip})
         innerPhone()
     } else
         innerForm()

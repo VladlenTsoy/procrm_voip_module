@@ -5,12 +5,12 @@ const startWebrtc = async (sip) => {
         url: admin_url + '/procrm_voip/setting/webrtcDetails',
         success: function (response) {
             const dataAuth = response.webrtc.extensions.find(extension => extension.username === sip)
-            const data = {sip: dataAuth.username, password: dataAuth.secret, ip: 'iptel.uz'};
+            const data = {login: dataAuth.username, password: dataAuth.secret, ip: 'iptel.uz'};
             Cookies.set('TOKEN_OPERATOR_CLIENT', response.token)
 
             // $('#top-procrm-voip').dropdown('show')
             // $('#started-procrm-voip-top').dropdown('toggle')
-            // saveAuthData(data)
+            saveAuthData(data)
             createUserAgent(data).then()
         },
         error: function (error) {

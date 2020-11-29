@@ -2,3 +2,300 @@
 .badge-success {
     background: #28a745;
 }
+
+.open-fix>.procrm-voip-dropdown-menu {
+    display: block;
+}
+
+.procrm-voip-dropdown-menu{
+    background: none;
+    box-shadow: none;
+}
+
+.procrm-voip-dropdown-menu .procrm-voip-dropdown{
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.procrm-voip-dropdown-menu .procrm-voip-dropdown .loading {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 0 16px 0 rgba(132, 132, 132, 0.18);
+    width: 200px;
+}
+
+/***/
+.procrm-voip-dropdown-menu .procrm-voip-dropdown .message {
+    padding: 1rem 1rem 0;
+}
+
+.procrm-voip-dropdown-menu .procrm-voip-dropdown .message .alert {
+    margin-bottom: 0;
+}
+
+
+#started-procrm-voip-top {
+    border: none;
+}
+
+.telephony-popup {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: 300px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0px 0px 16px 0px rgba(132, 132, 132, 0.18);
+}
+#telephony-call,
+#telephony-incoming {
+    /*display: none;*/
+}
+.telephony-popup .telephony-popup__header {
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    padding: 16px 0;
+    color: #888;
+    background: white;
+    align-items: center;
+    justify-content: space-around;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+}
+
+.telephony-popup .telephony-popup__header aside {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.telephony-popup .telephony-popup__header .telephony-popup__avatar {
+    border-radius: 50%;
+    width: 45%;
+}
+
+.telephony-popup .telephony-popup__header h1 {
+    margin: 0.5em 0 0.2em 0;
+    font-size: 1em;
+}
+
+.telephony-popup .telephony-popup__header p {
+    font-size: 0.85em;
+    margin: 0;
+}
+
+.telephony-popup .telephony-popup__main {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 16px;
+    line-height: calc(16px + 16px / 2);
+    color: #888;
+    text-align: center;
+    background: white;
+}
+
+.telephony-popup .telephony-popup__footer {
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    padding: 10px 0 16px 0;
+    align-items: center;
+    justify-content: space-around;
+    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+#telephony-keypad .telephony-popup__header .number-input {
+    font-size: 1.2em;
+    color: #d1d1d1;
+    font-weight: 400;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    padding: 0 20px;
+    border: 0;
+    background: #fafafa;
+}
+
+#telephony-keypad .keyboard .number {
+    width: 100%;
+    font-size: 0;
+    text-align: center;
+}
+
+#telephony-keypad .keyboard .align-bottom {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#telephony-call .addtional_functions_buttons {
+    display: inline-block;
+    width: 31%;
+}
+
+#telephony-call .addtional_functions_buttons button {
+    font-size: 20px;
+    color: #f44336;
+    text-align: center;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+#telephony-call .addtional_functions_buttons span,
+#telephony-incoming .telephony-popup__footer aside span {
+    font-size: 0.85em;
+    text-transform: lowercase;
+    color: #888;
+}
+
+#telephony-keypad .keyboard .number button {
+    font-size: 20px;
+    color: #f44336;
+    display: inline-block;
+    width: 32%;
+    text-align: center;
+    margin-bottom: 6px;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+#telephony-keypad .keyboard .number button:hover i,
+#telephony-call .addtional_functions_buttons button:hover i {
+    color: black;
+}
+
+#telephony-keypad .keyboard .number button:active i,
+#telephony-call .addtional_functions_buttons button:active i {
+    transform: translateY(1px);
+}
+
+#telephony-keypad .keyboard .number button:active i.delete {
+    box-shadow: 0 0 0 0;
+    -webkit-box-shadow: 0 0 0 0;
+    -moz-box-shadow: 0 0 0 0;
+    -ms-box-shadow: 0 0 0 0;
+    transform: translateY(0px);
+}
+
+#telephony-keypad .keyboard .number button:active i.delete svg {
+    transition: 250ms;
+}
+
+#telephony-keypad .keyboard .number button:active i.delete:active svg {
+    transform: translateY(2px);
+}
+
+#telephony-call .telephony-popup__header {
+    padding-bottom: 13px;
+}
+#telephony-keypad .keyboard .number button i,
+#telephony-call .addtional_functions_buttons button i {
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    background: #fafafa;
+    cursor: pointer;
+    border-radius: 100%;
+    transition: 250ms;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#telephony-keypad .keyboard .number button i.delete {
+    background: transparent;
+    box-shadow: 0 0 0 0;
+    -webkit-box-shadow: 0 0 0 0;
+    -moz-box-shadow: 0 0 0 0;
+    -ms-box-shadow: 0 0 0 0;
+    color: #e4bf88;
+}
+
+#telephony-keypad .keyboard .number button i.delete svg {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#telephony-keypad .keyboard .number .call-button,
+#telephony-keypad .keyboard .number .delete {
+    opacity: 0;
+    transition: 250ms;
+}
+
+#telephony-keypad .keyboard .number .call-button.show,
+#telephony-keypad .keyboard .number .delete.show {
+    opacity: 1;
+}
+#telephony-keypad .keyboard .number .call-button svg {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#telephony-call .telephony-popup__footer i,
+#telephony-incoming .telephony-popup__footer i {
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    font-size: 2em;
+    padding-left: 3px;
+    cursor: pointer;
+    border-radius: 100%;
+    transition: 250ms;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-box-shadow: 0px 0px 16px 0px rgba(132, 132, 132, 0.18);
+    -moz-box-shadow: 0px 0px 16px 0px rgba(132, 132, 132, 0.18);
+    box-shadow: 0px 0px 16px 0px rgba(132, 132, 132, 0.18);
+}
+
+#telephony-call .telephony-popup__footer i.end-call-button,
+#telephony-incoming .telephony-popup__footer i.end-call-button {
+    transform: rotate(135deg);
+    background: #f44336;
+}
+
+#telephony-incoming .telephony-popup__header {
+    height: 55%;
+}
+
+#telephony-incoming .telephony-popup__footer {
+    height: 50%;
+}
+
+#telephony-incoming .telephony-popup__footer i.answer-call-button {
+    background: #28b351;
+}
+
+#telephony-incoming {
+    position: fixed;
+    top: 10%;
+    right: 2%;
+    z-index: 9999999999;
+}
+
+#telephony-incoming .telephony-popup__footer aside {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#telephony-incoming .telephony-popup__footer aside span {
+    margin-top: 6px;
+}

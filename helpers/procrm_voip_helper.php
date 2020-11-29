@@ -36,9 +36,7 @@ function procrm_voip_add_head_components()
 function procrm_voip_load_js()
 {
     echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/js.cookie.js') . '"></script>';
-    echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/sip-0.17.1.min.js') . '"></script>';
-    echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/adapter-latest.js') . '"></script>';
-    echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/procrm_voip_webrtc.js' . '?v=' . PROCRM_VOIP_VERSIONING . '') . '"></script>';
+    echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/socket.io.min.js') . '"></script>';
     echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/procrm_voip.js' . '?v=' . PROCRM_VOIP_VERSIONING . '') . '"></script>';
 }
 

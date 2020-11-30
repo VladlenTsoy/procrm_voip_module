@@ -91,59 +91,50 @@ $(document).on('click', 'a[href^="tel:"]', function (e) {
     dial({toNum: tel})
 })
 
-// enter typed numbers on input field and show call & delete buttons
-const enterNumberToInput = function (e) {
+
+/**
+ * удалить числа в поле ввода
+ * @param e
+ */
+const deleteNumbers = function (e) {
     e.preventDefault();
 
     const numberInput = $("#numberInput")
+    const deleteButton = $("#procrm-voip-delete-button")
     const callButton = $("#procrm-voip-call-button")
-    const deleteButton = $(".delete")
 
-    if (numberInput.val().length < 9)
-        numberInput.val(
-            numberInput.val() + e.currentTarget.getAttribute("data-number")
-        );
+    const phoneNumber = numberInput.val().slice(0, -1);
+    numberInput.val(phoneNumber);
+    callButton.fadeOut(100);
 
-    if (numberInput.val().length >= 2)
-        callButton.fadeIn(0);
-
-    if (numberInput.val().length > 0)
-        deleteButton.addClass("show");
+    if (phoneNumber.length > 0)
+        deleteButton.fadeIn(100);
     else
-        deleteButton.removeClass("show");
+        deleteButton.fadeOut(100);
+};
+
+/**
+ * показать кнопку вызова и удаления
+ * @param e
+ */
+const showCallAndDeleteButtons = function (e) {
+    e.preventDefault();
+
+    const callButton = $("#procrm-voip-call-button")
+    const deleteButton = $("#procrm-voip-delete-button")
+    const value = e.currentTarget.value
+
+    if (value.length >= 9)
+        callButton.fadeIn(100);
+
+    if (e.which === 8)
+        callButton.removeClass("show");
+
+    if (value.length > 0)
+        deleteButton.fadeIn(100);
+    else
+        deleteButton.fadeOut(100);
 }
-
-// delete numbers in input field
-const deleteNumbers = function (e) {
-    e.preventDefault();
-    var phoneNumber = $("#numberInput").val().slice(0, -1);
-    $("#numberInput").val(phoneNumber);
-    $(".call-button").removeClass("show");
-
-    if (phoneNumber.length > 0) {
-        $(".delete").addClass("show");
-    } else {
-        $(".delete").removeClass("show");
-    }
-};
-
-// show call and delete button
-const showCallAndDeleteButtons = function (e, element) {
-    e.preventDefault();
-    if (element.value.length >= 9) {
-        $(".call-button").addClass("show");
-    }
-
-    if (e.which === 8) {
-        $(".call-button").removeClass("show");
-    }
-
-    if (element.value.length > 0) {
-        $(".delete").addClass("show");
-    } else {
-        $(".delete").removeClass("show");
-    }
-};
 
 
 // validate entering numbers directly in input field
@@ -165,6 +156,36 @@ const telephonyHTML = function () {
             const phoneNumber = $('input[name="phone_number"]').val();
             dial({toNum: phoneNumber})
         });
+
+
+    const numberInput = $("#numberInput")
+    const callButton = $("#procrm-voip-call-button")
+    const deleteButton = $("#procrm-voip-delete-button")
+
+    /**
+     * введите набранные числа в поле ввода и покажите кнопки вызова и удаления
+     * @param e
+     */
+    const enterNumberToInput = function (e) {
+
+    }
+
+    $('main.telephony-popup__main.keyboard').find('button').click(function (e) {
+        e.preventDefault();
+
+        if (numberInput.val().length < 9)
+            numberInput.val(
+                numberInput.val() + e.currentTarget.getAttribute("data-number")
+            );
+
+        if (numberInput.val().length >= 2)
+            callButton.fadeIn(100);
+
+        if (numberInput.val().length > 0)
+            deleteButton.fadeIn(100);
+        else
+            deleteButton.fadeOut(100);
+    })
 }
 
 

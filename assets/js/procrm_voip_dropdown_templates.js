@@ -96,7 +96,7 @@ const telephonyTemplate = () => `
                         </button>
                     </div>
                     <button type="button" onclick="enterNumberToInput(event, this)" data-number="0"><i>0</i></button>
-                    <button type="button" class="call-button" onclick="deleteNumbers(event)">
+                    <button type="button" class="call-button" id="procrm-voip-delete-button" onclick="deleteNumbers(event)">
                         <i>
                             <svg version="1.1" id="ico-cancel" xmlns="http://www.w3.org/2000/svg"
                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px"

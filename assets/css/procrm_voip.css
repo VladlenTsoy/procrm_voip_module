@@ -128,9 +128,10 @@
 }
 
 #telephony-keypad .keyboard .align-bottom {
-    display: flex;
+    display: grid;
     justify-content: center;
     width: 100%;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 #telephony-call .addtional_functions_buttons {
@@ -227,16 +228,18 @@
     vertical-align: middle;
 }
 
-#telephony-keypad .keyboard .number .call-button,
-#telephony-keypad .keyboard .number .delete {
-    opacity: 0;
+#telephony-keypad .keyboard .number .call-button {
+    display: none;
+    width: 100%;
+    padding: 0;
     transition: 250ms;
 }
 
 #telephony-keypad .keyboard .number .call-button.show,
 #telephony-keypad .keyboard .number .delete.show {
-    opacity: 1;
+    display: inline-block;
 }
+
 #telephony-keypad .keyboard .number .call-button svg {
     display: inline-block;
     vertical-align: middle;

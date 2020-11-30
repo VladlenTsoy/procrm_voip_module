@@ -67,8 +67,8 @@ const telephonyTemplate = () => `
                     <div>
                         <button type="submit" class="call-button" id="procrm-voip-call-button">
                             <i>
-                                <svg version="1.1" id="ico-call" xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px"
+                                <svg id="ico-call" xmlns="http://www.w3.org/2000/svg"
+                                    x="0px" y="0px" width="20px" height="20px"
                                     viewBox="0 0 30.055 30.056" style="enable-background:new 0 0 30.055 30.056; fill: #28b351;"
                                     xml:space="preserve">
                                     <g>
@@ -98,8 +98,8 @@ const telephonyTemplate = () => `
                     <button type="button" data-number="0"><i>0</i></button>
                     <button type="button" class="call-button" id="procrm-voip-delete-button">
                         <i>
-                            <svg version="1.1" id="ico-cancel" xmlns="http://www.w3.org/2000/svg"
-                                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px"
+                            <svg id="ico-cancel" xmlns="http://www.w3.org/2000/svg"
+                                x="0px" y="0px" width="20px" height="20px"
                                 viewBox="0 0 612 612" style="enable-background:new 0 0 612 612; fill: #f44336;"
                                 xml:space="preserve">
                                 <g>
@@ -123,7 +123,7 @@ const clientCardTemplate = (lead) => `
     <section id="telephony-call" class="telephony-popup">
         <header class="telephony-popup__header">
             <aside style="flex:1">
-                <img class="telephony-popup__avatar" src="${"../assets/images/user-placeholder.jpg"}" />
+                <img class="telephony-popup__avatar" src="${site_url + "assets/images/user-placeholder.jpg"}" alt="${lead.name || 'Неизвестный'}"/>
                 <h1 class="caller_name">${lead.name || 'Неизвестный'}</h1>
                 <p class="calling_status">${lead.phonenumber || 'Неизвестный'}</p>
             </aside>

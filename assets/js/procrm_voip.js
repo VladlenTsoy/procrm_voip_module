@@ -1,17 +1,9 @@
-// const socket = new io.Manager('http://localhost:3000', {reconnectionAttempts: 3});
-
-
 class ProcrmVoipPhoneDialPad {
-    //
-    numberInput = null
-    //
-    callButton = null
-    //
-    deleteButton = null
-    //
-    numberButtons = null
-
-    $renderHtml = null
+    numberInput = null      // Ввод номера
+    callButton = null       // Кнопка звонить
+    deleteButton = null     // Кнопка удалить цифру
+    numberButtons = null    // Цифры
+    $renderHtml = null      // Рендер
 
     constructor() {
         const renderHtml = telephonyTemplate()
@@ -25,6 +17,10 @@ class ProcrmVoipPhoneDialPad {
         this.events()
     }
 
+    /**
+     * При изменения инпута
+     * @param e
+     */
     changeNumberInputHandler = (e) => {
         const value = e.currentTarget.value
 
@@ -48,7 +44,7 @@ class ProcrmVoipPhoneDialPad {
     }
 
     /**
-     *
+     * Только цифры при нажатии
      * @param e
      */
     keyupNumberInputHandler = (e) => {
@@ -69,6 +65,10 @@ class ProcrmVoipPhoneDialPad {
         this.numberInput.change()
     }
 
+    /**
+     * Ввод цифр при нажатии на цифры
+     * @param e
+     */
     numberClickHandler = (e) => {
         e.preventDefault();
         if (this.numberInput.val().length < 9)
@@ -78,28 +78,35 @@ class ProcrmVoipPhoneDialPad {
         this.numberInput.change()
     }
 
+    /**
+     * События
+     */
     events() {
-        //
+        // При изменения инпута
         this.numberInput.change(this.changeNumberInputHandler)
-        //Удалить числа в поле ввода
+        // Удалить числа в поле ввода
         this.deleteButton.click(this.deleteButtonClickHandler)
         // Показать кнопку вызова и удаления
         this.numberInput.keydown(this.keydownNumberInputHandler)
-        //
+        // Только цифры при нажатии
         this.numberInput.keyup(this.keyupNumberInputHandler)
-        //
+        // Ввод цифр при нажатии на цифры
         this.numberButtons.click(this.numberClickHandler)
     }
 
+    /**
+     * Вывод рендер
+     * @returns {null} | {html}
+     */
     render() {
         return this.$renderHtml
     }
 }
 
 class ProcrmVoipPhoneClientCard {
-    currentLead = null
-    hangup = () => null
-    $renderHtml = null
+    currentLead = null      // Текущий лид
+    hangup = () => null     // Сброс звонка
+    $renderHtml = null      // Рендер
 
     constructor({lead, hangup}) {
         this.currentLead = lead
@@ -116,45 +123,69 @@ class ProcrmVoipPhoneClientCard {
         this.events()
     }
 
+    /**
+     * Звершения текущего звонка
+     * @param e
+     */
     endCurrentCallHandler = (e) => {
         e.preventDefault()
         this.hangup()
     }
 
+    /**
+     * Открыть детали лида по ID
+     * @param e
+     */
     openDetailsHandler = (e) => {
+        e.preventDefault()
         init_lead(this.currentLead.id)
     }
 
+    /**
+     * Создать лида
+     * @param e
+     */
     openCreateLeadHandler = (e) => {
+        e.preventDefault()
         init_lead()
         setTimeout(() => $('#phonenumber').val(this.currentLead.tel), 500)
     }
 
+    /**
+     * Редактировать лида
+     * @param e
+     */
     openEditLeadHandler = (e) => {
+        e.preventDefault()
         init_lead(this.currentLead.id, true)
     }
 
+    /**
+     * События
+     */
     events() {
-        //
+        // Звершения текущего звонка
         this.endCurrentCall.click(this.endCurrentCallHandler)
-
+        // Открыть детали лида
         this.seeDetailsOfCurrentCaller.click(this.openDetailsHandler)
-
+        // Создать лида
         this.addCurrentCaller.click(this.openCreateLeadHandler)
-
+        // Редактировать лида
         this.editCurrentCaller.click(this.openEditLeadHandler)
     }
 
+    /**
+     * Рендер
+     * @returns {null} | {html}
+     */
     render() {
         return this.$renderHtml
     }
 }
 
 class ProcrmVoipPhoneDropdown {
-    // Текущий каннал
-    currentChannel = null
-    // Сокет
-    socket = null
+    currentChannel = null       // Текущий каннал
+    socket = null               // Сокет
 
     constructor() {
         this.socket = new io('http://localhost:3000', {reconnectionAttempts: 3})
@@ -170,6 +201,9 @@ class ProcrmVoipPhoneDropdown {
         localStorage.setItem('PROCRM_VOIP_CURRENT_CHANNEL', channel)
     }
 
+    /**
+     * Удалить текущий канал
+     */
     removeCurrentChannel = () => {
         this.currentChannel = null
         localStorage.removeItem('PROCRM_VOIP_CURRENT_CHANNEL')
@@ -206,9 +240,9 @@ class ProcrmVoipPhoneDropdown {
     /**
      * Закрыть окно
      */
-    closeDropdown() {
-        setTimeout(() => $("#nav-li-header-procrm-call", document).removeClass('open'), 0)
-    }
+    // closeDropdown() {
+    //     setTimeout(() => $("#nav-li-header-procrm-call", document).removeClass('open'), 0)
+    // }
 
 
     /***** RENDER *****/
@@ -295,7 +329,7 @@ class ProcrmVoipPhoneDropdown {
     }
 
     /**
-     * Инитиализация евентов
+     * Инитиализация событий
      */
     initEvents() {
         // Ошибка переподключения
@@ -323,7 +357,9 @@ class ProcrmVoipPhoneDropdown {
         })
     }
 
-
+    /**
+     * Инит кнопки в хеадере
+     */
     initCallDropdown() {
         const navbar = $('#header nav > ul.navbar-nav')
 
@@ -337,34 +373,55 @@ class ProcrmVoipPhoneDropdown {
         )
     }
 
+    /**
+     * Начать звонок
+     * @param toNum
+     */
     dial({toNum}) {
         this.socket.emit('ami_dial_preparation', {tel: toNum})
         this.setFixOpen()
         this.renderDropdown(loadingTemplate('Подключение...'))
     }
 
+    /**
+     * SIP не включен
+     */
     sipNotRegistered = () => {
         this.openDropdown()
         this.telephonyHTML()
         this.renderAlertDropdown('danger', 'Ошибка! SIP - Телефон не включен!')
     }
 
+    /**
+     * Звонок успешно начался
+     * @param data
+     */
     successfulDial = (data) => {
         this.updateCurrentChannel(data.info.channel)
         this.setFixOpen()
         this.clientCard({lead: data.lead})
     }
 
+    /**
+     * Отмена звонка на SIP local
+     */
     callRejected = () => {
         alert_float('danger', 'Вызов был отклонен!')
         this.telephonyHTML()
     }
 
+    /**
+     * Открыть лида
+     * @param lead
+     */
     clientCard = ({lead}) => {
         const clientCard = new ProcrmVoipPhoneClientCard({lead, hangup: this.hangup})
         this.renderDropdown(clientCard.render())
     }
 
+    /**
+     * Рендер телефона
+     */
     telephonyHTML() {
         const dialPad = new ProcrmVoipPhoneDialPad()
         const $render = this.renderDropdown(dialPad.render())

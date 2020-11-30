@@ -48,20 +48,20 @@ const telephonyTemplate = () => `
             <header class="telephony-popup__header">
                 <aside style="flex:1">
                     <input name="phone_number" type="text" maxlength="9" class="number-input" id="numberInput"
-                        value="" placeholder="Введите номер" onkeypress="validateInputNumbers(event)" onkeyup="showCallAndDeleteButtons(event, this)" />
+                        value="" placeholder="Введите номер"/>
                 </aside>
             </header>
             <main class="telephony-popup__main keyboard">
                 <div class="number">
-                    <button type="button" onclick="enterNumberToInput(event, this)" data-number="1"><i>1</i></button>
-                    <button type="button" onclick="enterNumberToInput(event, this)" data-number="2"><i>2</i></button>
-                    <button type="button" onclick="enterNumberToInput(event, this)" data-number="3"><i>3</i></button>
-                    <button type="button" onclick="enterNumberToInput(event, this)" data-number="4"><i>4</i></button>
-                    <button type="button" onclick="enterNumberToInput(event, this)" data-number="5"><i>5</i></button>
-                    <button type="button" onclick="enterNumberToInput(event, this)" data-number="6"><i>6</i></button>
-                    <button type="button" onclick="enterNumberToInput(event, this)" data-number="7"><i>7</i></button>
-                    <button type="button" onclick="enterNumberToInput(event, this)" data-number="8"><i>8</i></button>
-                    <button type="button" onclick="enterNumberToInput(event, this)" data-number="9"><i>9</i></button>
+                    <button type="button" data-number="1"><i>1</i></button>
+                    <button type="button" data-number="2"><i>2</i></button>
+                    <button type="button" data-number="3"><i>3</i></button>
+                    <button type="button" data-number="4"><i>4</i></button>
+                    <button type="button" data-number="5"><i>5</i></button>
+                    <button type="button" data-number="6"><i>6</i></button>
+                    <button type="button" data-number="7"><i>7</i></button>
+                    <button type="button" data-number="8"><i>8</i></button>
+                    <button type="button" data-number="9"><i>9</i></button>
                 </div>
                 <div class="number align-bottom">
                     <div>
@@ -95,8 +95,8 @@ const telephonyTemplate = () => `
                             </i>
                         </button>
                     </div>
-                    <button type="button" onclick="enterNumberToInput(event, this)" data-number="0"><i>0</i></button>
-                    <button type="button" class="call-button" id="procrm-voip-delete-button" onclick="deleteNumbers(event)">
+                    <button type="button" data-number="0"><i>0</i></button>
+                    <button type="button" class="call-button" id="procrm-voip-delete-button">
                         <i>
                             <svg version="1.1" id="ico-cancel" xmlns="http://www.w3.org/2000/svg"
                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px"

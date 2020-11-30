@@ -16,7 +16,6 @@ const initCallDropdown = () => {
     )
 }
 
-
 (() => {
     // Инитиализация звонилки ожидание статуса
     initCallDropdown()
@@ -28,6 +27,7 @@ const initCallDropdown = () => {
         alert_float('error', 'Ошибка! Сервер не отвечает.')
     })
 
+    // Проверка подключение ami
     socket.on('ami_connect', (data) => {
         if (data.status === 'success')
             telephonyHTML()
@@ -53,16 +53,19 @@ const initCallDropdown = () => {
     socket.on('ami_dial_contact', (data) => {
         setTimeout(() => $("#nav-li-header-procrm-call", document).removeClass('open-fix'), 0)
         switch (parseInt(data.info.reason)) {
+            // SIP не включен
             case 0:
                 setTimeout(() => $("#nav-li-header-procrm-call", document).addClass('open'), 0)
                 telephonyHTML()
                 $("#telephony-alert").html(messageTemplate('danger', 'Ошибка! SIP - Телефон не включен!'))
                 break;
+            // Звонок
             case 4:
                 localStorage.setItem('PROCRM_VOIP_CURRENT_CHANNEL', data.info.channel)
                 setTimeout(() => $("#nav-li-header-procrm-call", document).addClass('open-fix'), 0)
                 clientCard({lead: data.lead})
                 break;
+            // Вызов отклонен
             case 5:
                 alert_float('danger', 'Вызов был отклонен!')
                 telephonyHTML()
@@ -88,64 +91,10 @@ $(document).on('click', 'a[href^="tel:"]', function (e) {
     e.preventDefault()
     let tel = e.currentTarget.href.replace('tel:', '');
     tel = tel.replace('+', '')
-    dial({toNum: tel})
+
+    if (!localStorage.getItem('PROCRM_VOIP_CURRENT_CHANNEL'))
+        dial({toNum: tel})
 })
-
-
-/**
- * удалить числа в поле ввода
- * @param e
- */
-const deleteNumbers = function (e) {
-    e.preventDefault();
-
-    const numberInput = $("#numberInput")
-    const deleteButton = $("#procrm-voip-delete-button")
-    const callButton = $("#procrm-voip-call-button")
-
-    const phoneNumber = numberInput.val().slice(0, -1);
-    numberInput.val(phoneNumber);
-    callButton.fadeOut(100);
-
-    if (phoneNumber.length > 0)
-        deleteButton.fadeIn(100);
-    else
-        deleteButton.fadeOut(100);
-};
-
-/**
- * показать кнопку вызова и удаления
- * @param e
- */
-const showCallAndDeleteButtons = function (e) {
-    e.preventDefault();
-
-    const callButton = $("#procrm-voip-call-button")
-    const deleteButton = $("#procrm-voip-delete-button")
-    const value = e.currentTarget.value
-
-    if (value.length >= 9)
-        callButton.fadeIn(100);
-
-    if (e.which === 8)
-        callButton.removeClass("show");
-
-    if (value.length > 0)
-        deleteButton.fadeIn(100);
-    else
-        deleteButton.fadeOut(100);
-}
-
-
-// validate entering numbers directly in input field
-const validateInputNumbers = function (e) {
-    // if the letter is not digit then display error and don't type anything
-    if (e.which !== 8 && e.which !== 0 && (e.which < 48 || e.which > 57)) {
-        //display error message
-        e.preventDefault();
-        return false;
-    }
-};
 
 const telephonyHTML = function () {
     $(".procrm-voip-dropdown")
@@ -166,25 +115,54 @@ const telephonyHTML = function () {
      * введите набранные числа в поле ввода и покажите кнопки вызова и удаления
      * @param e
      */
-    const enterNumberToInput = function (e) {
-
-    }
-
-    $('main.telephony-popup__main.keyboard').find('button').click(function (e) {
+    $('main.telephony-popup__main.keyboard').find('[data-number]').click(function (e) {
         e.preventDefault();
-
         if (numberInput.val().length < 9)
             numberInput.val(
                 numberInput.val() + e.currentTarget.getAttribute("data-number")
             );
+        numberInput.change()
+    })
 
-        if (numberInput.val().length >= 2)
+
+    numberInput.change(function (e) {
+        const value = e.currentTarget.value
+
+        if (value.length > 2)
             callButton.fadeIn(100);
+        else
+            callButton.fadeOut(100);
 
-        if (numberInput.val().length > 0)
+        if (value.length > 0)
             deleteButton.fadeIn(100);
         else
             deleteButton.fadeOut(100);
+    })
+
+
+    /**
+     * удалить числа в поле ввода
+     * @param e
+     */
+    deleteButton.click(function (e) {
+        e.preventDefault();
+
+        const phoneNumber = numberInput.val().slice(0, -1);
+        numberInput.val(phoneNumber);
+
+        numberInput.change()
+    })
+
+    /**
+     * показать кнопку вызова и удаления
+     * @param e
+     */
+    numberInput.keydown(function (e) {
+        $(e.currentTarget).change()
+    })
+    numberInput.keyup(function (e) {
+        $(e.currentTarget).val($(e.currentTarget).val().replace(/[^0-9]/g, ''))
+        $(e.currentTarget).change()
     })
 }
 

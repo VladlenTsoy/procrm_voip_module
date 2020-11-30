@@ -129,28 +129,31 @@ const clientCardTemplate = (lead) => `
             </aside>
         </header>
         <main class="telephony-popup__main">
-            <div class="addtional_functions_buttons">
-                <button onclick="editCurrentCaller(event)">
-                    <i class="fa fa-pencil"></i>
-                </button>
-                <span>Edit</span>
-            </div>
-            <div class="addtional_functions_buttons">
-                <button onclick="addCurrentCaller(event)">
-                    <i class="fa fa-plus"></i>
-                </button>
-                <span>Add</span>
-            </div>
-            <div class="addtional_functions_buttons">
-                <button onclick="seeDetailsOfCurrrentCaller(event)">
-                    <i class="fa fa-info"></i>
-                </button>
-                <span>Details</span>
-            </div>
+            ${lead.id ? `
+                    <div class="addtional_functions_buttons">
+                        <button id="editCurrentCaller">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+                        <span>Edit</span>
+                    </div>
+                   <div class="addtional_functions_buttons">
+                        <button id="seeDetailsOfCurrentCaller">
+                            <i class="fa fa-info"></i>
+                        </button>
+                        <span>Details</span>
+                    </div>
+            ` : `
+                    <div class="addtional_functions_buttons">
+                        <button id="addCurrentCaller">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        <span>Add</span>
+                    </div>
+            `}
         </main>
         <footer class="telephony-popup__footer">
             <aside style="flex:1;color:#fff;text-align:center;">
-                <i onclick="endCurrentCall(event)" class="fa fa-phone end-call-button" aria-hidden="true"></i>
+                <i id="endCurrentCall" class="fa fa-phone end-call-button" aria-hidden="true"></i>
             </aside>
         </footer>
     </section>

@@ -36,21 +36,6 @@
                                 <!---->
                                 <hr/>
                                 <!---->
-                                <h4 class="text-muted">WebRTC - аккаунты</h4>
-                                <div class="procrm-voip-setting-sip">
-                                    <?php foreach ($webrtc['extensions'] as $extension) { ?>
-                                        <div class="item">
-                                            <i class="fa fa-phone-square text-muted"></i>
-                                            <div class="title">
-                                                <?php echo $extension['username'] ?>
-                                            </div>
-                                            <button class="btn btn-default btn-sm btn-auth-webrtc" data-username="<?php echo $extension['username']?>"><i class="fa fa-sign-in"></i> Войти</button>
-                                        </div>
-                                    <?php } ?>
-                                </div>
-                                <!---->
-                                <hr/>
-                                <!---->
                                 <h4 class="text-muted">SIP - аккаунты</h4>
                                 <div class="procrm-voip-setting-sip">
                                     <?php foreach ($userSetting['lines'] as $line) { ?>
@@ -71,6 +56,9 @@
                                                 <span class="badge">Оффлайн</span>
                                                 <?php } ?>
                                             </div>
+                                            <?php if($line['sipStatus']['registered']) { ?>
+                                                <button class="btn btn-default btn-sm btn-auth-webrtc" data-username="<?php echo $line['telNum']?>"><i class="fa fa-sign-in"></i> Войти</button>
+                                            <?php } ?>
                                         </div>
                                     <?php } ?>
                                 </div>

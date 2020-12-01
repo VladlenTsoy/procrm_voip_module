@@ -187,8 +187,8 @@ class ProcrmVoipPhoneDropdown {
     currentChannel = null       // Текущий каннал
     socket = null               // Сокет
 
-    constructor() {
-        this.socket = new io('http://localhost:3000', {reconnectionAttempts: 3})
+    constructor({sip}) {
+        this.socket = new io('http://localhost:3000?sip=' + sip, {reconnectionAttempts: 3})
         this.currentChannel = localStorage.getItem('PROCRM_VOIP_CURRENT_CHANNEL')
     }
 
@@ -447,6 +447,8 @@ class ProcrmVoipPhoneDropdown {
 }
 
 
-const phone = new ProcrmVoipPhoneDropdown()
+if(localStorage.getItem('PROCRM_VOIP_CURRENT_SIP')) {
+    const phone = new ProcrmVoipPhoneDropdown({sip: localStorage.getItem('PROCRM_VOIP_CURRENT_SIP')})
 
-phone.start()
+    phone.start()
+}

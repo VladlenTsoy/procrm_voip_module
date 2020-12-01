@@ -1,22 +1,8 @@
 const startWebrtc = async (sip) => {
-    return $.ajax({
-        type: 'post',
-        dataType: 'json',
-        url: admin_url + '/procrm_voip/setting/webrtcDetails',
-        success: function (response) {
-            const dataAuth = response.webrtc.extensions.find(extension => extension.username === sip)
-            const data = {login: dataAuth.username, password: dataAuth.secret, ip: 'iptel.uz'};
-            Cookies.set('TOKEN_OPERATOR_CLIENT', response.token)
-
-            // $('#top-procrm-voip').dropdown('show')
-            // $('#started-procrm-voip-top').dropdown('toggle')
-            saveAuthData(data)
-            createUserAgent(data).then()
-        },
-        error: function (error) {
-            console.log(error)
-        }
-    });
+    localStorage.setItem('PROCRM_VOIP_CURRENT_SIP', sip)
+    const phone = new ProcrmVoipPhoneDropdown({sip})
+    phone.start()
+    alert_float('success', 'Вы успешно добавили SIP-аккаунт!')
 }
 
 $(document).find('.btn-auth-webrtc').click(function (e) {
@@ -27,8 +13,18 @@ $(document).find('.btn-auth-webrtc').click(function (e) {
 
     target.html(`<i class="fa fa-spin fa-refresh"></i> Загрузка...`).attr('disabled', 'disabled')
 
-    startWebrtc(username).then(() =>
-        target.html(prevHtml).removeAttr('disabled')
-    )
+    startWebrtc(username).then(() => {
+        const sip = localStorage.getItem('PROCRM_VOIP_CURRENT_SIP')
+        $(`.btn-auth-webrtc[data-username="${sip}"]`)
+            .html('<i class="fa fa-check"></i> Готово')
+            .attr('disabled', 'disabled')
+    })
 })
 
+
+$(document).ready(function () {
+    const sip = localStorage.getItem('PROCRM_VOIP_CURRENT_SIP')
+    $(`.btn-auth-webrtc[data-username="${sip}"]`)
+        .html('<i class="fa fa-check"></i> Готово')
+        .attr('disabled', 'disabled')
+})

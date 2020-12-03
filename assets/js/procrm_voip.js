@@ -184,36 +184,47 @@ class ProcrmVoipPhoneClientCard {
 }
 
 class ProcrmVoipPhoneDropdown {
-    currentChannel = null       // Текущий каннал
+    currentCall = null          // Теущий звонок
     socket = null               // Сокет
 
     constructor({sip}) {
         this.socket = new io('http://localhost:3000?sip=' + sip, {reconnectionAttempts: 3})
-        this.currentChannel = localStorage.getItem('PROCRM_VOIP_CURRENT_CHANNEL')
+        this.currentCall = localStorage.getItem('PROCRM_VOIP_CURRENT_CALL') ?
+            JSON.parse(localStorage.getItem('PROCRM_VOIP_CURRENT_CALL')) : null
+
+        if (this.currentCall)
+            this.checkChannel()
     }
 
     /**
      * Обновить текущий канал
-     * @param channel
+     * @param data
      */
-    updateCurrentChannel = (channel) => {
-        this.currentChannel = channel
-        localStorage.setItem('PROCRM_VOIP_CURRENT_CHANNEL', channel)
+    updateCurrentCall = (data) => {
+        this.currentCall = data
+        localStorage.setItem('PROCRM_VOIP_CURRENT_CALL', JSON.stringify(data))
     }
 
     /**
      * Удалить текущий канал
      */
-    removeCurrentChannel = () => {
-        this.currentChannel = null
-        localStorage.removeItem('PROCRM_VOIP_CURRENT_CHANNEL')
+    removeCurrentCall = () => {
+        this.currentCall = null
+        localStorage.removeItem('PROCRM_VOIP_CURRENT_CALL')
     }
 
     /**
      * Сбросить звонок
      */
     hangup = () => {
-        this.socket.emit('ami_hangup', {channel: this.currentChannel})
+        this.socket.emit('ami_hangup', {channel: this.currentCall?.info?.channel})
+    }
+
+    /**
+     * Проверить статус
+     */
+    checkChannel = () => {
+        this.socket.emit('ami_check_channel', this.currentCall)
     }
 
     /**
@@ -292,7 +303,7 @@ class ProcrmVoipPhoneDropdown {
      * @param data
      */
     amiNewstateHandler = (data) => {
-        this.updateCurrentChannel(data.info.channel)
+        this.updateCurrentCall(data)
         this.setFixOpen()
         this.clientCard(data)
     }
@@ -301,7 +312,7 @@ class ProcrmVoipPhoneDropdown {
      * Сброс звонка
      */
     amiEventHangupHandler = () => {
-        this.removeCurrentChannel()
+        this.removeCurrentCall()
         this.removeFixOpen()
         this.telephonyHTML()
     }
@@ -352,7 +363,7 @@ class ProcrmVoipPhoneDropdown {
             let tel = e.currentTarget.href.replace('tel:', '');
             tel = tel.replace('+', '')
 
-            if (!this.currentChannel)
+            if (!this.currentCall)
                 this.dial({toNum: tel})
         })
     }
@@ -397,7 +408,7 @@ class ProcrmVoipPhoneDropdown {
      * @param data
      */
     successfulDial = (data) => {
-        this.updateCurrentChannel(data.info.channel)
+        this.updateCurrentCall(data)
         this.setFixOpen()
         this.clientCard({lead: data.lead})
     }
@@ -447,7 +458,7 @@ class ProcrmVoipPhoneDropdown {
 }
 
 
-if(localStorage.getItem('PROCRM_VOIP_CURRENT_SIP')) {
+if (localStorage.getItem('PROCRM_VOIP_CURRENT_SIP')) {
     const phone = new ProcrmVoipPhoneDropdown({sip: localStorage.getItem('PROCRM_VOIP_CURRENT_SIP')})
 
     phone.start()

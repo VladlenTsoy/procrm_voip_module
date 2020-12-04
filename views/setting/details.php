@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
+<link href="<?php echo module_dir_url('procrm_voip', 'assets/css/procrm_voip_setting_details.css'); ?>" rel="stylesheet">
 <div id="wrapper">
     <div class="content">
         <div class="row">
@@ -36,7 +37,10 @@
                                 <!---->
                                 <hr/>
                                 <!---->
-                                <h4 class="text-muted">SIP - аккаунты</h4>
+                                <div class="procrm-voip-sip-title">
+                                    <h4 class="text-muted">SIP - аккаунты</h4>
+                                    <button type="button" class="btn btn-small" onclick="javascript:location.reload()"><i class="fa fa-refresh"></i></button>
+                                </div>
                                 <div class="procrm-voip-setting-sip">
                                     <?php foreach ($userSetting['lines'] as $line) { ?>
                                         <div class="item">
@@ -90,7 +94,6 @@
     </div>
 </div>
 <?php init_tail(); ?>
-<link href="<?php echo module_dir_url('procrm_voip', 'assets/css/procrm_voip_setting_details.css'); ?>" rel="stylesheet">
 <script src="<?php echo module_dir_url('procrm_voip', 'assets/js/procrm_voip_details.js'); ?>"></script>
 </body>
 </html>

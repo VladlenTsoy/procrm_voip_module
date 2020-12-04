@@ -47,6 +47,8 @@ function procrm_voip_load_js()
  */
 function procrm_voip_call_status($statusId) {
     switch ($statusId) {
+        case 2:
+            return 'Занят';
         case 3:
             return 'Не отвечает';
         case 4:

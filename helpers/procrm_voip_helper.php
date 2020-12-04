@@ -7,7 +7,7 @@ Author URI: http://procrm.uz
 */
 
 defined('BASEPATH') or exit('No direct script access allowed');
-define('PROCRM_VOIP_VERSIONING', get_instance()->app_scripts->core_version());
+define('PROCRM_VOIP_VERSIONING', '2.6.1');
 
 
 if (staff_can('view', PROCRM_VOIP_MODULE_NAME)) {

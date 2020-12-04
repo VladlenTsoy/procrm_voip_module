@@ -31,7 +31,7 @@ $(document).ready(function () {
     $('#procrm-voip-details-logout').click(function (e) {
         e.preventDefault()
         localStorage.removeItem('PROCRM_VOIP_CURRENT_SIP')
-        window.location.replace("/procrm_voip/setting/logout");
+        window.location.replace(admin_url + "/procrm_voip/setting/logout")
     })
 
 })

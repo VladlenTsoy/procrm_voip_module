@@ -26,12 +26,9 @@
                                         <div><span class="badge">Оператор</span></div>
                                     </div>
                                     <div class="actions">
-                                        <a
-                                                class="btn btn-default btn-block"
-                                                href="<?php echo admin_url('procrm_voip/setting/logout') ?>"
-                                        >
+                                        <button class="btn btn-default btn-block" id="procrm-voip-details-logout">
                                             <i class="fa fa-power-off"></i> Выйти
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                                 <!---->

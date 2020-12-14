@@ -10,7 +10,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 define('PROCRM_VOIP_VERSIONING', '2.6.1');
 
 
-if (staff_can('view', PROCRM_VOIP_MODULE_NAME)) {
+if (staff_can('view', 'procrm_voip_templates')) {
     hooks()->add_action('app_admin_head', 'procrm_voip_add_head_components');
     hooks()->add_action('app_admin_footer', 'procrm_voip_load_js');
 }

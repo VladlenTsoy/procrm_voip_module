@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
+<link href="<?php echo module_dir_url('procrm_voip', 'assets/css/procrm_voip_setting_details.css'); ?>" rel="stylesheet">
 <div id="wrapper">
     <div class="content">
         <div class="row">
@@ -25,33 +26,18 @@
                                         <div><span class="badge">Оператор</span></div>
                                     </div>
                                     <div class="actions">
-                                        <a
-                                                class="btn btn-default btn-block"
-                                                href="<?php echo admin_url('procrm_voip/setting/logout') ?>"
-                                        >
+                                        <button class="btn btn-default btn-block" id="procrm-voip-details-logout">
                                             <i class="fa fa-power-off"></i> Выйти
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                                 <!---->
                                 <hr/>
                                 <!---->
-                                <h4 class="text-muted">WebRTC - аккаунты</h4>
-                                <div class="procrm-voip-setting-sip">
-                                    <?php foreach ($webrtc['extensions'] as $extension) { ?>
-                                        <div class="item">
-                                            <i class="fa fa-phone-square text-muted"></i>
-                                            <div class="title">
-                                                <?php echo $extension['username'] ?>
-                                            </div>
-                                            <button class="btn btn-default btn-sm btn-auth-webrtc" data-username="<?php echo $extension['username']?>"><i class="fa fa-sign-in"></i> Войти</button>
-                                        </div>
-                                    <?php } ?>
+                                <div class="procrm-voip-sip-title">
+                                    <h4 class="text-muted">SIP - аккаунты</h4>
+                                    <button type="button" class="btn btn-small" onclick="javascript:location.reload()"><i class="fa fa-refresh"></i></button>
                                 </div>
-                                <!---->
-                                <hr/>
-                                <!---->
-                                <h4 class="text-muted">SIP - аккаунты</h4>
                                 <div class="procrm-voip-setting-sip">
                                     <?php foreach ($userSetting['lines'] as $line) { ?>
                                         <div class="item">
@@ -71,6 +57,9 @@
                                                 <span class="badge">Оффлайн</span>
                                                 <?php } ?>
                                             </div>
+                                            <?php if($line['sipStatus']['registered']) { ?>
+                                                <button class="btn btn-default btn-sm btn-auth-webrtc" data-username="<?php echo $line['telNum']?>"><i class="fa fa-sign-in"></i> Войти</button>
+                                            <?php } ?>
                                         </div>
                                     <?php } ?>
                                 </div>
@@ -102,7 +91,6 @@
     </div>
 </div>
 <?php init_tail(); ?>
-<link href="<?php echo module_dir_url('procrm_voip', 'assets/css/procrm_voip_setting_details.css'); ?>" rel="stylesheet">
 <script src="<?php echo module_dir_url('procrm_voip', 'assets/js/procrm_voip_details.js'); ?>"></script>
 </body>
 </html>

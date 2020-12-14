@@ -7,10 +7,10 @@ Author URI: http://procrm.uz
 */
 
 defined('BASEPATH') or exit('No direct script access allowed');
-define('PROCRM_VOIP_VERSIONING', get_instance()->app_scripts->core_version());
+define('PROCRM_VOIP_VERSIONING', '2.6.1');
 
 
-if (staff_can('view', PROCRM_VOIP_MODULE_NAME)) {
+if (staff_can('view', 'procrm_voip_templates')) {
     hooks()->add_action('app_admin_head', 'procrm_voip_add_head_components');
     hooks()->add_action('app_admin_footer', 'procrm_voip_load_js');
 }
@@ -36,9 +36,8 @@ function procrm_voip_add_head_components()
 function procrm_voip_load_js()
 {
     echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/js.cookie.js') . '"></script>';
-    echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/sip-0.17.1.min.js') . '"></script>';
-    echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/adapter-latest.js') . '"></script>';
-    echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/procrm_voip_webrtc.js' . '?v=' . PROCRM_VOIP_VERSIONING . '') . '"></script>';
+    echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/socket.io.min.js') . '"></script>';
+    echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/procrm_voip_dropdown_templates.js' . '?v=' . PROCRM_VOIP_VERSIONING . '') . '"></script>';
     echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/procrm_voip.js' . '?v=' . PROCRM_VOIP_VERSIONING . '') . '"></script>';
 }
 
@@ -48,6 +47,8 @@ function procrm_voip_load_js()
  */
 function procrm_voip_call_status($statusId) {
     switch ($statusId) {
+        case 2:
+            return 'Занят';
         case 3:
             return 'Не отвечает';
         case 4:

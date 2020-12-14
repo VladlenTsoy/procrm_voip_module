@@ -17,6 +17,12 @@
     margin-top: 2rem;
 }
 
+.procrm-voip-sip-title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
 /** Настройка левого меню WebRTC и SIP аккаунтов **/
 .procrm-voip-setting-sip {
 }

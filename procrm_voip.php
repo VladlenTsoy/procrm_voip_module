@@ -14,6 +14,9 @@ define('PROCRM_VOIP_MODULE_NAME', 'procrm_voip');
 
 // Установить кнопку в меню
 hooks()->add_action('admin_init', 'procrm_voip_init_menu_items');
+// Добавить в ролях права телефонии
+hooks()->add_filter('staff_permissions', 'procrm_voip_init_permissions');
+
 
 $CI = &get_instance();
 
@@ -27,7 +30,7 @@ $CI->load->helper(PROCRM_VOIP_MODULE_NAME . '/procrm_voip');
  */
 function procrm_voip_init_menu_items()
 {
-    if (is_admin()) {
+    if (is_admin() || has_permission('procrm_voip_templates', '', 'view')) {
         $CI = &get_instance();
 
         $CI->app_menu->add_sidebar_menu_item('procrm_voip_menu', [
@@ -55,6 +58,22 @@ function procrm_voip_init_menu_items()
     }
 }
 
+/**
+ * Добавить права в ролях
+ * @param $data
+ * @return mixed
+ */
+function procrm_voip_init_permissions ($data) {
+
+    $data['procrm_voip_templates'] = [
+        'name'         => _l('voip_telephony'),
+        'capabilities' => [
+            'view' => _l('permission_view'),
+        ],
+    ];
+
+    return $data;
+}
 
 /**
  * Зарегистрировать hook модуля активации

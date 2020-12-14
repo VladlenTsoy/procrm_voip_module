@@ -1,4 +1,41 @@
 /** Общее **/
+
+/*  */
 .badge-success {
     background: #28a745;
+}
+
+/** Фиксированное открытие **/
+.open-fix > .procrm-voip-dropdown-menu {
+    display: block;
+}
+
+/** Телефон **/
+.procrm-voip-dropdown-menu {
+    background: none;
+    box-shadow: none;
+    color: #888;
+}
+
+.procrm-voip-dropdown-menu .procrm-voip-dropdown {
+    padding: 0;
+    margin-top: 1rem;
+}
+
+/** Загрузка **/
+.procrm-voip-dropdown-menu .procrm-voip-dropdown .loading {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 0 16px 0 rgba(132, 132, 132, 0.18);
+    width: 200px;
+}
+
+/** Сообщение в телефоне **/
+.procrm-voip-dropdown-menu .procrm-voip-dropdown .message {
+    padding: 1rem 1rem 0;
+}
+
+.procrm-voip-dropdown-menu .procrm-voip-dropdown .message .alert {
+    margin-bottom: 0;
 }

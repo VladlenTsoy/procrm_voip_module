@@ -37,6 +37,7 @@ class Setting extends AdminController
     public function _auth()
     {
         $data = ['title' => 'Авторизация PROCRM VoIP'];
+        $data = [];
         $this->load->view('setting/auth', $data);
     }
 
@@ -161,3 +162,4 @@ class Setting extends AdminController
         echo json_encode($data);
     }
 }
+

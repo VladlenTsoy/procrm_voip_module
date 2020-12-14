@@ -15,7 +15,7 @@
                                 авторизации.
                             </div>
                         <?php } ?>
-                        <table class="table table-bordered table-hover table-responsive">
+                        <table class="table dataTable no-footer dtr-inline">
                             <thead>
                             <th>Тип</th>
                             <th>Статус</th>

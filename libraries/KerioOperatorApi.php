@@ -36,7 +36,7 @@ class KerioOperatorApi
     public function changeDomain($domain)
     {
         if ($domain)
-            $this->url = $domain . ":443/myphone/api/jsonrpc/";
+            $this->url = $domain . ":4021/admin/api/jsonrpc/";
     }
 
     /**

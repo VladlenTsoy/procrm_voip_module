@@ -28,37 +28,140 @@ class History extends AdminController
 
         $data = [
             'title' => 'История звонков',
-            'kerio' => null,
-            'calls' => []
+            'kerio' => $kerioStaff,
         ];
 
-        if ($kerioStaff) {
-            $resCallHistory = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserCallHistory.get', ['timeStartMax' => 0, 'limit' => 100]);
-            $responseContacts = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getAddressBook', []);
+        $this->load->view('history', $data);
+    }
 
-            $data['kerio'] = $kerioStaff;
-            $data['calls'] = isset($resCallHistory['result']['callHistory']) ? $resCallHistory['result']['callHistory'] : [];
 
-            if (count($data['calls'])) {
-                $tmpCalls = [];
-                foreach ($data['calls'] as $key => $call) {
-                    if ($call['toNum']) {
-                        $lead = $this->_findLead($call['toNum']);
+    /**
+     * Вывод таблицы
+     */
+    public function table()
+    {
+        $data = $this->input->post();
 
-                        if ($lead)
-                            $call['lead'] = $lead;
-                        else
-                            $call['kerio_contact'] = $this->_findKerioContact($responseContacts, $call['toNum']);
+        $staffId = get_staff_user_id();
+        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
 
-                        array_push($tmpCalls, $call);
-                    }
-                }
-            }
+        // Параметры для запроса
+        $query = [
+            'start' => $data['start'],
+            'limit' => $data['length'],
+        ];
 
-            $data['calls'] = $tmpCalls;
+        // Поиск
+        if (isset($data['search'])) {
+            $query['combining'] = 'And';
+            $query['conditions'] = [
+                [
+                    'comparator' => 'Like',
+                    'fieldName' => 'SEARCH',
+                    'value' => $data['search']['value']
+                ]
+            ];
         }
 
-        $this->load->view('history', $data);
+        // Сортировка
+        if (isset($data['order'])) {
+            $columnOrder = ['FROM_TYPE', 'STATUS', 'TO_NUM', 'TO_NUM', 'ANSWERED_DURATION', 'TO_NUM', 'TIMESTAMP'];
+            foreach ($data['order'] as $order) {
+                $query['orderBy'][] = ['columnName' => $columnOrder[$order['column']], 'direction' => ucfirst($order['dir'])];
+            }
+        }
+
+        $response = [
+            'aaData' => [],
+            'draw' => $data['draw'],
+            'iTotalDisplayRecords' => 0,
+            'iTotalRecords' => 0,
+        ];
+
+        $resCallHistory = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'CallHistory.get', ['query' => $query]);
+        if (isset($resCallHistory['result'])) {
+            $calls = isset($resCallHistory['result']['callHistory']) ? $resCallHistory['result']['callHistory'] : [];
+            $outputData = $this->_columnData($calls);
+            $response['aaData'] = $outputData;
+            $response['iTotalRecords'] = $resCallHistory['result']['totalItems'];
+            $response['iTotalDisplayRecords'] = $resCallHistory['result']['totalItems'];
+        }
+
+        echo json_encode($response);
+    }
+
+    /**
+     * Вывод столбца
+     * @param $calls
+     * @return array
+     */
+    public function _columnData($calls)
+    {
+        $outputData = [];
+
+        foreach ($calls as $call) {
+            $data = [
+                'duration' => $call['ANSWERED_DURATION'],
+                'timestamp' => $call['TIMESTAMP'],
+                'status' => $call['STATUS']
+            ];
+            if (strlen($call['FROM_NUM']) > 3) {
+                $data['type'] = 1;
+                $data['staff'] = $call['TO_NUM'];
+                $data['num'] = $call['FROM_NUM'];
+            } else {
+                $data['type'] = 2;
+                $data['staff'] = $call['FROM_NUM'];
+                $data['num'] = $call['TO_NUM'];
+            }
+
+            $outputData[] = $this->_columnDataView($data);
+        }
+
+        return $outputData;
+    }
+
+    /**
+     * Вывод столбца view
+     * @param $column
+     * @return array
+     */
+    public function _columnDataView($column)
+    {
+        $row = [];
+        // Тип
+        $row[] = $column['type'] === 1 ? '<i class="fa fa-arrow-down text-success"></i> Входящий' : '<i class="fa fa-arrow-up text-danger"></i> Исходящий';
+        // Статус
+        $row[] = procrm_voip_call_status($column['status']);
+        // Лид
+        $row[] = $this->_columnLeadView($column['num']);
+        // Номер телефона
+        $row[] = '<a href="tel:' . $column['num'] . '">' . $column['num'] . '</a>';
+        // Длительность
+        $row[] = $column['duration'] . ' c';
+        // Ответственный
+        $row[] = $column['staff'];
+        // Дата
+        $row[] = date('H:i d-m-Y', $column['timestamp']);
+        return $row;
+    }
+
+    /**
+     * Лид
+     * @param $num
+     * @return string
+     */
+    public function _columnLeadView($num)
+    {
+        $lead = $this->_findLead($num);
+        if ($lead)
+            $column['lead'] = $lead;
+        else
+            $column['kerio_contact'] = $num;
+
+        return isset($column['lead']) ?
+            '<a href="javascript:init_lead(' . $column['lead']['id'] . ')">' . $column['lead']['name'] . '</a>' :
+            '<a href="javascript:init_lead()"><i class="fa fa-plus"></i> Создать</a>';
     }
 
     /**
@@ -69,9 +172,13 @@ class History extends AdminController
     protected function _findLead($tel)
     {
         $leads = [];
+        $tel = preg_replace('/[^0-9]/', '', $tel);
 
-        if (strlen($tel) > 9 || strlen($tel) === 9) {
+        if (strlen($tel) >= 9) {
             $toTel = strlen($tel) > 9 ? substr($tel, -9) : $tel;
+            $leads = $this->leads_model->get(null, "phonenumber LIKE '%" . $toTel . "%'");
+        } elseif (strlen($tel) < 9 && strlen($tel) >= 7) {
+            $toTel = strlen($tel) > 7 ? substr($tel, -7) : $tel;
             $leads = $this->leads_model->get(null, "phonenumber LIKE '%" . $toTel . "%'");
         }
 

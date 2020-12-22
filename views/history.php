@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
+<link href="<?php echo module_dir_url('procrm_voip', 'assets/css/procrm_voip_history.css'); ?>" rel="stylesheet">
 <div id="wrapper">
     <div class="content">
         <div class="row">
@@ -15,49 +16,37 @@
                                 авторизации.
                             </div>
                         <?php } ?>
-                        <table class="table dataTable no-footer dtr-inline">
-                            <thead>
-                            <th>Тип</th>
-                            <th>Статус</th>
-                            <th>Контакт</th>
-                            <th>Номер</th>
-                            <th>Ожидание</th>
-                            <th>Длительность</th>
-                            <th>Время</th>
-                            <th></th>
-                            </thead>
-                            <tbody>
-                            <?php foreach ($calls as $call) { ?>
-                                <tr>
-                                    <td>
-                                        <?php echo $call['type'] === 1 ? '<i class="fa fa-arrow-down text-success"></i>' : '<i class="fa fa-arrow-up text-danger"></i>' ?>
-                                        <?php echo $call['type'] === 1 ? 'Входящий' : 'Исходящий' ?>
-                                    </td>
-                                    <td><?php echo procrm_voip_call_status($call['status']) ?></td>
-                                    <td>
-                                        <?php
-                                        echo isset($call['lead']) ?
-                                            '<a href="javascript:init_lead(' . $call['lead']['id'] . ')">' . $call['lead']['name'] . '</a>' :
-                                            (isset($call['kerio_contact']) ? $call['kerio_contact']['name'] : 'Неизвестно')
-                                        ?>
-                                    </td>
-                                    <td>
-                                        <a href="tel:<?php echo $call['toNum'] ?>"><?php echo $call['toNum'] ?></a>
-                                    </td>
-                                    <td><?php echo $call['callDuration'] - $call['answeredDuration'] ?> c.</td>
-                                    <td><?php echo $call['answeredDuration'] ?> c.</td>
-                                    <td>
-                                        <?php echo date('H:i d-m-Y', $call['timestamp']) ?>
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-success btn-sm" href="tel:<?php echo $call['toNum'] ?>">
-                                            <i class="fa fa-phone"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                            </tbody>
-                        </table>
+                        <?php echo render_datatable([
+                            _l('Тип'),
+                            _l('Статус'),
+                            _l('Контакт'),
+                            _l('Номер'),
+                            _l('Длительность'),
+                            _l('Сотрудник'),
+                            _l('Время')
+                        ],
+                            'voip-history'
+                        ) ?>
+
+                        <a href="#" data-toggle="modal" data-target="#voip_history_bulk_action" class="bulk-actions-btn table-btn hide" data-table=".table-voip-history"><?php echo _l('bulk_actions'); ?></a>
+                        <div class="modal fade bulk_actions" id="voip_history_bulk_action" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title"><?php echo _l('bulk_actions'); ?></h4>
+                                    </div>
+                                    <div class="modal-body">
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
+                                        <a href="#" class="btn btn-info" onclick="voip_history_bulk_action(this); return false;"><?php echo _l('confirm'); ?></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -65,7 +54,6 @@
     </div>
 </div>
 <?php init_tail(); ?>
-<link href="<?php echo module_dir_url('procrm_voip', 'assets/css/procrm_voip_history.css'); ?>" rel="stylesheet">
 <script src="<?php echo module_dir_url('procrm_voip', 'assets/js/procrm_voip_history.js'); ?>"></script>
 </body>
 </html>

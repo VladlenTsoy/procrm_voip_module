@@ -50,3 +50,7 @@ if (!$CI->db->table_exists(db_prefix() . 'procrm_voip_kerio_staff')) {
     $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_kerio_staff`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT');
 }
+
+if (!$CI->db->field_exists('sip_telephone', db_prefix() . 'staff')) {
+    $CI->db->query('ALTER TABLE `' . db_prefix() . 'staff` ADD `sip_telephone` INT(11) NULL AFTER `email_signature`;');
+}

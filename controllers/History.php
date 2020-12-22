@@ -15,6 +15,7 @@ class History extends AdminController
         parent::__construct();
         $this->kerioApi = new KerioOperatorApi();
         $this->load->model('Procrm_voip_kerio_staff_model', 'kerio_staff_model');
+        $this->load->model('staff_model');
         $this->load->model('leads_model');
     }
 
@@ -140,7 +141,7 @@ class History extends AdminController
         // Длительность
         $row[] = $column['duration'] . ' c';
         // Ответственный
-        $row[] = $column['staff'];
+        $row[] = $this->_findStaff($column['staff']) ?? $column['staff'];
         // Дата
         $row[] = date('H:i d-m-Y', $column['timestamp']);
         return $row;
@@ -153,15 +154,43 @@ class History extends AdminController
      */
     public function _columnLeadView($num)
     {
+        $num = preg_replace('/[^0-9]/', '', $num);
+        $contact = '<a href="javascript:init_lead()"><i class="fa fa-plus"></i> Создать</a>';
         $lead = $this->_findLead($num);
-        if ($lead)
-            $column['lead'] = $lead;
-        else
-            $column['kerio_contact'] = $num;
+        if ($lead) {
+            $contact = '<a href="javascript:init_lead(' . $lead['id'] . ')">' . $lead['name'] . '</a>';
+        } else {
+            $contact = $this->_findStaff($num) ?? $contact;
+        }
 
-        return isset($column['lead']) ?
-            '<a href="javascript:init_lead(' . $column['lead']['id'] . ')">' . $column['lead']['name'] . '</a>' :
-            '<a href="javascript:init_lead()"><i class="fa fa-plus"></i> Создать</a>';
+        return $contact;
+    }
+
+
+    /**
+     * Поиск сотрудников
+     * @param $tel
+     * @return string|null
+     */
+    protected function _findStaff($tel)
+    {
+        $staff = $this->staff_model->get('', ['sip_telephone' => $tel]);
+        if (count($staff) && isset($staff[0]) && isset($staff[0]["staffid"])) {
+            $full_name = $staff[0]['firstname'] . ' ' . $staff[0]['lastname'];
+            return '<a href="' . admin_url('profile/' . $staff[0]["staffid"]) . '" target="_blank" data-toggle="tooltip" data-title="' . $full_name . '">'
+                . staff_profile_image($staff[0]["staffid"], ['staff-profile-image-small'])
+                . '</a>';
+        } else if (strlen($tel) >= 7) {
+            $staff = $this->staff_model->get('', "phonenumber LIKE '%" . $tel . "%'");
+            if (count($staff) && isset($staff[0]) && isset($staff[0]["staffid"])) {
+                $full_name = $staff[0]['firstname'] . ' ' . $staff[0]['lastname'];
+                return '<a href="' . admin_url('profile/' . $staff[0]["staffid"]) . '" target="_blank" data-toggle="tooltip" data-title="' . $full_name . '">'
+                    . staff_profile_image($staff[0]["staffid"], ['staff-profile-image-small'])
+                    . '</a>';
+            } else
+                return null;
+        } else
+            return null;
     }
 
     /**
@@ -172,8 +201,6 @@ class History extends AdminController
     protected function _findLead($tel)
     {
         $leads = [];
-        $tel = preg_replace('/[^0-9]/', '', $tel);
-
         if (strlen($tel) >= 9) {
             $toTel = strlen($tel) > 9 ? substr($tel, -9) : $tel;
             $leads = $this->leads_model->get(null, "phonenumber LIKE '%" . $toTel . "%'");

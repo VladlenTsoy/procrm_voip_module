@@ -45,14 +45,19 @@ function procrm_voip_load_js()
  * @param $statusId
  * @return string
  */
-function procrm_voip_call_status($statusId) {
+function procrm_voip_call_status($statusId)
+{
     switch ($statusId) {
+        case 1:
+            return 'Сбой вызова';
         case 2:
             return 'Занят';
         case 3:
             return 'Не отвечает';
         case 4:
             return 'Отвечено';
+        case 5:
+            return 'Вызов запрещен';
         case 6:
             return 'Отвечен по голосовой почте';
     }

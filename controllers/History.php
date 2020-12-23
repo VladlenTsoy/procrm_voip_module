@@ -141,7 +141,8 @@ class History extends AdminController
         // Длительность
         $row[] = $column['duration'] . ' c';
         // Ответственный
-        $row[] = $this->_findStaff($column['staff']) ?? $column['staff'];
+        $staff = $this->_findStaff($column['staff']);
+        $row[] = $staff ? $staff : $column['staff'];
         // Дата
         $row[] = date('H:i d-m-Y', $column['timestamp']);
         return $row;
@@ -174,19 +175,22 @@ class History extends AdminController
      */
     protected function _findStaff($tel)
     {
-        $staff = $this->staff_model->get('', ['sip_telephone' => $tel]);
-        if (count($staff) && isset($staff[0]) && isset($staff[0]["staffid"])) {
-            $full_name = $staff[0]['firstname'] . ' ' . $staff[0]['lastname'];
-            return '<a href="' . admin_url('profile/' . $staff[0]["staffid"]) . '" target="_blank" data-toggle="tooltip" data-title="' . $full_name . '">'
-                . staff_profile_image($staff[0]["staffid"], ['staff-profile-image-small'])
-                . '</a>';
-        } else if (strlen($tel) >= 7) {
-            $staff = $this->staff_model->get('', "phonenumber LIKE '%" . $tel . "%'");
+        if ($this->db->field_exists('sip_telephone', db_prefix() . 'staff')) {
+            $staff = $this->staff_model->get('', ['sip_telephone' => $tel]);
             if (count($staff) && isset($staff[0]) && isset($staff[0]["staffid"])) {
                 $full_name = $staff[0]['firstname'] . ' ' . $staff[0]['lastname'];
                 return '<a href="' . admin_url('profile/' . $staff[0]["staffid"]) . '" target="_blank" data-toggle="tooltip" data-title="' . $full_name . '">'
                     . staff_profile_image($staff[0]["staffid"], ['staff-profile-image-small'])
                     . '</a>';
+            } else if (strlen($tel) >= 7) {
+                $staff = $this->staff_model->get('', "phonenumber LIKE '%" . $tel . "%'");
+                if (count($staff) && isset($staff[0]) && isset($staff[0]["staffid"])) {
+                    $full_name = $staff[0]['firstname'] . ' ' . $staff[0]['lastname'];
+                    return '<a href="' . admin_url('profile/' . $staff[0]["staffid"]) . '" target="_blank" data-toggle="tooltip" data-title="' . $full_name . '">'
+                        . staff_profile_image($staff[0]["staffid"], ['staff-profile-image-small'])
+                        . '</a>';
+                } else
+                    return null;
             } else
                 return null;
         } else

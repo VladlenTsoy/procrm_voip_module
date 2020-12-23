@@ -5,6 +5,11 @@
     <div class="content">
         <div class="row">
             <div class="col-md-12">
+                <div class="_filters _hidden_inputs hidden">
+                    <?php
+                    echo form_hidden('staff_ids');
+                    ?>
+                </div>
                 <div class="panel_s">
                     <div class="panel-body">
                         <h3 class="no-margin">История звонков</h3>
@@ -27,21 +32,37 @@
                         ],
                             'voip-history'
                         ) ?>
-
-                        <a href="#" data-toggle="modal" data-target="#voip_history_bulk_action" class="bulk-actions-btn table-btn hide" data-table=".table-voip-history"><?php echo _l('bulk_actions'); ?></a>
+                        <a href="#" data-toggle="modal" data-target="#voip_history_bulk_action"
+                           class="bulk-actions-btn table-btn hide"
+                           data-table=".table-voip-history"><?php echo _l('filter_by'); ?></a>
                         <div class="modal fade bulk_actions" id="voip_history_bulk_action" tabindex="-1" role="dialog">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title"><?php echo _l('bulk_actions'); ?></h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title"><?php echo _l('filter_by'); ?></h4>
                                     </div>
                                     <div class="modal-body">
-
+                                        <form id="form-filter-staff">
+                                            <?php echo render_select(
+                                                'filter_staff',
+                                                $staff,
+                                                ['staffid', 'full_name'],
+                                                'staff',
+                                                '',
+                                                ['multiple' => true],
+                                                [], '', 'filter_staff_select', false
+                                            ); ?>
+                                        </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
-                                        <a href="#" class="btn btn-info" onclick="voip_history_bulk_action(this); return false;"><?php echo _l('confirm'); ?></a>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                            <?php echo _l('close'); ?>
+                                        </button>
+                                        <button type="submit" class="btn btn-info" form="form-filter-staff">
+                                            <?php echo _l('confirm'); ?>
+                                        </button>
                                     </div>
                                 </div>
                             </div>

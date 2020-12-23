@@ -32,10 +32,10 @@
                         ],
                             'voip-history'
                         ) ?>
-                        <a href="#" data-toggle="modal" data-target="#voip_history_bulk_action"
+                        <a href="#" data-toggle="modal" data-target="#voip_history_modal_action"
                            class="bulk-actions-btn table-btn hide"
                            data-table=".table-voip-history"><?php echo _l('filter_by'); ?></a>
-                        <div class="modal fade bulk_actions" id="voip_history_bulk_action" tabindex="-1" role="dialog">
+                        <div class="modal fade bulk_actions" id="voip_history_modal_action" tabindex="-1" role="dialog">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">

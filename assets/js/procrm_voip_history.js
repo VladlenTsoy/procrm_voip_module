@@ -11,5 +11,6 @@ $(function () {
         const staffIds = staff.map(id => id.value)
         $('[name="staff_ids"]').val(staffIds)
         table.ajax.reload();
+        $('#voip_history_modal_action').modal('hide')
     })
 });

@@ -29,7 +29,7 @@ class History extends AdminController
         $staff = $this->staff_model->get('', ['active' => 1]);
 
         $data = [
-            'title' => 'История звонков',
+            'title' => _l('call_history'),
             'kerio' => $kerioStaff,
             'staff' => $staff,
         ];
@@ -155,7 +155,7 @@ class History extends AdminController
     {
         $row = [];
         // Тип
-        $row[] = $column['type'] === 1 ? '<i class="fa fa-arrow-down text-success"></i> Входящий' : '<i class="fa fa-arrow-up text-danger"></i> Исходящий';
+        $row[] = $column['type'] === 1 ? '<i class="fa fa-arrow-down text-success"></i> ' . _l('incoming') : '<i class="fa fa-arrow-up text-danger"></i> ' . _l('outgoing');
         // Статус
         $row[] = procrm_voip_call_status($column['status']);
         // Лид
@@ -180,7 +180,7 @@ class History extends AdminController
     public function _columnLeadView($num)
     {
         $num = preg_replace('/[^0-9]/', '', $num);
-        $contact = '<a href="javascript:init_lead()"><i class="fa fa-plus"></i> Создать</a>';
+        $contact = '<a href="javascript:init_lead()"><i class="fa fa-plus"></i> ' . _l('create') . '</a>';
         $lead = $this->_findLead($num);
         if ($lead) {
             $contact = '<a href="javascript:init_lead(' . $lead['id'] . ')">' . $lead['name'] . '</a>';

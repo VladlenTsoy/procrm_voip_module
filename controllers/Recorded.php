@@ -27,7 +27,7 @@ class Recorded extends History
         $staff = $this->staff_model->get('', ['active' => 1]);
 
         $data = [
-            'title' => 'Записанные вызовы',
+            'title' => _l('call_recorded'),
             'kerio' => $kerioStaff,
             'staff' => $staff,
         ];

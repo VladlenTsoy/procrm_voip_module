@@ -4,4 +4,5 @@
 
 $lang['voip_telephony']                                  = 'VoIP Телефония';
 $lang['call_history']                                    = 'История звонков';
+$lang['call_recorded']                                    = 'Запись звонков';
 

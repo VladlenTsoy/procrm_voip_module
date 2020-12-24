@@ -12,26 +12,24 @@
                 </div>
                 <div class="panel_s">
                     <div class="panel-body">
-                        <h3 class="no-margin">История звонков</h3>
+                        <h3 class="no-margin"><?php _l('call_history') ?></h3>
                         <hr class="hr-panel-heading"/>
                         <?php if (!isset($kerio)) { ?>
-                            <div class="alert alert-warning">
-                                <b>Требуется авторизация!</b> Перейдите в раздел VoIP Телефония -> <a
-                                        href="<?php echo admin_url('procrm_voip/setting') ?>">Настройки</a> для
-                                авторизации.
-                            </div>
+                            <?php include('./blocks/alert_auth_required.php') ?>
                         <?php } ?>
+
                         <?php echo render_datatable([
-                            _l('Тип'),
-                            _l('Статус'),
-                            _l('Контакт'),
-                            _l('Номер'),
-                            _l('Длительность'),
-                            _l('Сотрудник'),
-                            _l('Время')
+                            _l('type'),
+                            _l('status'),
+                            _l('contact'),
+                            _l('telephone'),
+                            _l('duration'),
+                            _l('staff'),
+                            _l('time')
                         ],
                             'voip-history'
                         ) ?>
+
                         <a href="#" data-toggle="modal" data-target="#voip_history_modal_action"
                            class="bulk-actions-btn table-btn hide"
                            data-table=".table-voip-history"><?php echo _l('filter_by'); ?></a>

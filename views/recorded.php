@@ -6,21 +6,17 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        <h3 class="no-margin">Записанные вызовы</h3>
+                        <h3 class="no-margin"><?php echo _l('call_recorded') ?></h3>
                         <hr class="hr-panel-heading"/>
                         <?php if (!isset($kerio)) { ?>
-                            <div class="alert alert-warning">
-                                <b>Требуется авторизация!</b> Перейдите в раздел VoIP Телефония -> <a
-                                    href="<?php echo admin_url('procrm_voip/setting') ?>">Настройки</a> для
-                                авторизации.
-                            </div>
+                            <?php include('./blocks/alert_auth_required.php') ?>
                         <?php } ?>
                         <?php echo render_datatable([
-                            _l('Контакт'),
-                            _l('Номер'),
-                            _l('Длительность'),
-                            _l('Сотрудник'),
-                            _l('Время'),
+                            _l('contact'),
+                            _l('telephone'),
+                            _l('duration'),
+                            _l('staff'),
+                            _l('time'),
                             ''
                         ],
                             'voip-recorded'
@@ -32,7 +28,7 @@
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title"><?php echo _l('Запись звонка'); ?></h4>
+                                        <h4 class="modal-title"><?php echo _l('call_recording'); ?></h4>
                                     </div>
                                     <div class="modal-body">
                                         <div style="text-align: center">

@@ -8,8 +8,8 @@
                     <div class="panel-body">
                         <h3 class="no-margin"><?php echo _l('call_recorded') ?></h3>
                         <hr class="hr-panel-heading"/>
-                        <?php if (!isset($kerio)) { ?>
-                            <?php include('./blocks/alert_auth_required.php') ?>
+                        <?php if (!$kerio) { ?>
+                            <?php include('blocks/alert_auth_required.php') ?>
                         <?php } ?>
                         <?php echo render_datatable([
                             _l('contact'),

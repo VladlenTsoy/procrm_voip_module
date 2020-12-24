@@ -19,4 +19,9 @@ $lang['time']                                           = 'Время';
 $lang['call_recording']                                 = 'Запись звонка';
 $lang['incoming']                                       = 'Входящий';
 $lang['outgoing']                                       = 'Исходящий';
+$lang['domain']                                         = 'Домен';
+$lang['login']                                          = 'Логин';
+$lang['password']                                       = 'Пароль';
+$lang['logIn']                                          = 'Авторизоваться';
+$lang['error']                                          = 'Ошибка';
 

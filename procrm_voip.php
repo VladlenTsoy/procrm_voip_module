@@ -30,7 +30,7 @@ $CI->load->helper(PROCRM_VOIP_MODULE_NAME . '/procrm_voip');
  */
 function procrm_voip_init_menu_items()
 {
-    if (is_admin() || has_permission('procrm_voip_templates', '', 'view')) {
+    if (is_admin() || has_permission(PROCRM_VOIP_MODULE_NAME, '', 'view')) {
         $CI = &get_instance();
 
         $CI->app_menu->add_sidebar_menu_item('procrm_voip_menu', [
@@ -49,6 +49,15 @@ function procrm_voip_init_menu_items()
         ]);
 
         $CI->app_menu->add_sidebar_children_item('procrm_voip_menu', [
+            'slug' => 'procrm_voip_sub_menu_recorded',
+            'name' => _l('call_recorded'),
+            'href' => admin_url('procrm_voip/recorded'),
+            'position' => 11,
+            'icon' => 'fa fa-microphone',
+        ]);
+    }
+    if (is_admin() || has_permission(PROCRM_VOIP_MODULE_NAME, '', 'setting')) {
+        $CI->app_menu->add_sidebar_children_item('procrm_voip_menu', [
             'slug' => 'procrm_voip_sub_menu_setting',
             'name' => _l('settings'),
             'href' => admin_url('procrm_voip/setting'),
@@ -65,10 +74,12 @@ function procrm_voip_init_menu_items()
  */
 function procrm_voip_init_permissions ($data) {
 
-    $data['procrm_voip_templates'] = [
+    $data[PROCRM_VOIP_MODULE_NAME] = [
         'name'         => _l('voip_telephony'),
         'capabilities' => [
             'view' => _l('permission_view'),
+            'setting' => _l('permission_setting'),
+            'recorded' => _l('call_recorded'),
         ],
     ];
 

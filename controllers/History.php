@@ -48,52 +48,6 @@ class History extends AdminController
         $staffId = get_staff_user_id();
         $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
 
-        // Параметры для запроса
-        $query = [
-            'start' => $data['start'],
-            'limit' => $data['length'],
-            'conditions' => [],
-        ];
-
-        // Поиск
-        if (isset($data['search']) && $data['search']['value'] !== '') {
-            $query['combining'] = 'And';
-            $query['conditions'][] = [
-                'comparator' => 'Like',
-                'fieldName' => 'SEARCH',
-                'value' => $data['search']['value']
-            ];
-        }
-
-        // Сортировка
-        if (isset($data['order'])) {
-            $columnOrder = ['FROM_TYPE', 'STATUS', 'TO_NUM', 'TO_NUM', 'ANSWERED_DURATION', 'TO_NUM', 'TIMESTAMP'];
-            foreach ($data['order'] as $order) {
-                $query['orderBy'][] = ['columnName' => $columnOrder[$order['column']], 'direction' => ucfirst($order['dir'])];
-            }
-        }
-
-        //
-        if (isset($data['staff_ids']) && $data['staff_ids'] !== '') {
-            $query['combining'] = 'Or';
-            $staff = $this->staff_model->get('', "staffid IN (" . $data['staff_ids'] . ")");
-            if ($staff)
-                foreach ($staff as $val) {
-                    if ($val['sip_telephone']) {
-                        $query['conditions'][] = [
-                            'comparator' => 'Eq',
-                            'fieldName' => 'TO_NUM',
-                            'value' => $val['sip_telephone']
-                        ];
-                        $query['conditions'][] = [
-                            'comparator' => 'Eq',
-                            'fieldName' => 'FROM_NUM',
-                            'value' => $val['sip_telephone']
-                        ];
-                    }
-                }
-        }
-
         $response = [
             'aaData' => [],
             'draw' => $data['draw'],
@@ -101,15 +55,63 @@ class History extends AdminController
             'iTotalRecords' => 0,
         ];
 
-        $resCallHistory = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'CallHistory.get', ['query' => $query]);
+        if ($kerioStaff) {
+            // Параметры для запроса
+            $query = [
+                'start' => $data['start'],
+                'limit' => $data['length'],
+                'conditions' => [],
+            ];
 
-        if (isset($resCallHistory['result']) && $resCallHistory['result']['totalItems'] > 0) {
-            $calls = isset($resCallHistory['result']['callHistory']) ? $resCallHistory['result']['callHistory'] : [];
-            $outputData = $this->_columnData($calls);
-            $response['aaData'] = $outputData;
-            $response['iTotalRecords'] = $resCallHistory['result']['totalItems'];
-            $response['iTotalDisplayRecords'] = $resCallHistory['result']['totalItems'];
-            $response['data'] = $data;
+            // Поиск
+            if (isset($data['search']) && $data['search']['value'] !== '') {
+                $query['combining'] = 'And';
+                $query['conditions'][] = [
+                    'comparator' => 'Like',
+                    'fieldName' => 'SEARCH',
+                    'value' => $data['search']['value']
+                ];
+            }
+
+            // Сортировка
+            if (isset($data['order'])) {
+                $columnOrder = ['FROM_TYPE', 'STATUS', 'TO_NUM', 'TO_NUM', 'ANSWERED_DURATION', 'TO_NUM', 'TIMESTAMP'];
+                foreach ($data['order'] as $order) {
+                    $query['orderBy'][] = ['columnName' => $columnOrder[$order['column']], 'direction' => ucfirst($order['dir'])];
+                }
+            }
+
+            //
+            if (isset($data['staff_ids']) && $data['staff_ids'] !== '') {
+                $query['combining'] = 'Or';
+                $staff = $this->staff_model->get('', "staffid IN (" . $data['staff_ids'] . ")");
+                if ($staff)
+                    foreach ($staff as $val) {
+                        if ($val['sip_telephone']) {
+                            $query['conditions'][] = [
+                                'comparator' => 'Eq',
+                                'fieldName' => 'TO_NUM',
+                                'value' => $val['sip_telephone']
+                            ];
+                            $query['conditions'][] = [
+                                'comparator' => 'Eq',
+                                'fieldName' => 'FROM_NUM',
+                                'value' => $val['sip_telephone']
+                            ];
+                        }
+                    }
+            }
+
+            $resCallHistory = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'CallHistory.get', ['query' => $query]);
+
+            if (isset($resCallHistory['result']) && $resCallHistory['result']['totalItems'] > 0) {
+                $calls = isset($resCallHistory['result']['callHistory']) ? $resCallHistory['result']['callHistory'] : [];
+                $outputData = $this->_columnData($calls);
+                $response['aaData'] = $outputData;
+                $response['iTotalRecords'] = $resCallHistory['result']['totalItems'];
+                $response['iTotalDisplayRecords'] = $resCallHistory['result']['totalItems'];
+                $response['data'] = $data;
+            }
         }
 
         echo json_encode($response);

@@ -14,8 +14,8 @@
                     <div class="panel-body">
                         <h3 class="no-margin"><?php _l('call_history') ?></h3>
                         <hr class="hr-panel-heading"/>
-                        <?php if (!isset($kerio)) { ?>
-                            <?php include('./blocks/alert_auth_required.php') ?>
+                        <?php if (!$kerio) { ?>
+                            <?php include('blocks/alert_auth_required.php') ?>
                         <?php } ?>
 
                         <?php echo render_datatable([
@@ -33,7 +33,8 @@
                         <a href="#" data-toggle="modal" data-target="#voip_history_modal_action"
                            class="bulk-actions-btn table-btn hide"
                            data-table=".table-voip-history"><?php echo _l('filter_by'); ?></a>
-                        <div class="modal fade bulk_actions" id="voip_history_modal_action" tabindex="-1" role="dialog">
+                        <div class="modal fade bulk_actions" id="voip_history_modal_action" tabindex="-1"
+                             role="dialog">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">

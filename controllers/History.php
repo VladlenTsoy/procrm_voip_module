@@ -242,25 +242,4 @@ class History extends AdminController
             'name' => $leads[0]['name'],
         ] : null;
     }
-
-    /**
-     * Поиск контакта из керио
-     * @param $contacts
-     * @param $tel
-     * @return array|null
-     */
-    protected function _findKerioContact($contacts, $tel)
-    {
-        $tmp = null;
-        if (isset($contacts['result']['addressBook'])) {
-            foreach ($contacts['result']['addressBook'] as $contact) {
-                foreach ($contact['numbers'] as $number) {
-                    if ($number['telNum'] === $tel)
-                        $tmp = ['name' => $contact['fullName']];
-                }
-            }
-        }
-
-        return $tmp;
-    }
 }

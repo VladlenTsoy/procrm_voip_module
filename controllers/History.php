@@ -25,7 +25,7 @@ class History extends AdminController
     public function index()
     {
         $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+        $kerioStaff = $this->kerio_staff_model->getKerioStaff($staffId);
         $staff = $this->staff_model->get('', ['active' => 1]);
 
         $data = [
@@ -46,7 +46,7 @@ class History extends AdminController
         $data = $this->input->post();
 
         $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+        $kerioStaff = $this->kerio_staff_model->getKerioStaff($staffId);
 
         $response = [
             'aaData' => [],

@@ -23,7 +23,7 @@ class Recorded extends History
     public function index()
     {
         $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+        $kerioStaff = $this->kerio_staff_model->getKerioStaff($staffId);
         $staff = $this->staff_model->get('', ['active' => 1]);
 
         $data = [
@@ -43,7 +43,7 @@ class Recorded extends History
         $data = $this->input->post();
 
         $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+        $kerioStaff = $this->kerio_staff_model->getKerioStaff($staffId);
 
         $response = [
             'aaData' => [],
@@ -171,7 +171,7 @@ class Recorded extends History
         $data = $this->input->post();
 
         $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+        $kerioStaff = $this->kerio_staff_model->getKerioStaff($staffId);
 
         if (isset($data['id'])) {
             $resRecorded = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'Recordings.downloadAudioContent', ['id' => $data['id'], 'transcode' => true]);

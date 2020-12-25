@@ -24,7 +24,7 @@ class Setting extends AdminController
     public function index()
     {
         $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+        $kerioStaff = $this->kerio_staff_model->getKerioStaff($staffId);
 
         if ($kerioStaff)
             $this->_details($kerioStaff);
@@ -135,7 +135,7 @@ class Setting extends AdminController
         $data = $this->input->post();
 
         $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+        $kerioStaff = $this->kerio_staff_model->getKerioStaff($staffId);
 
         $response = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.dial', ['extensionGuid' => 32, 'toNum' => $data['toNum']]);
         echo json_encode($response);
@@ -149,7 +149,7 @@ class Setting extends AdminController
         $data = $this->input->post();
 
         $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+        $kerioStaff = $this->kerio_staff_model->getKerioStaff($staffId);
 
         $response = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.hangup', ['callId' => $data['callId']]);
         echo json_encode($response);
@@ -161,7 +161,7 @@ class Setting extends AdminController
     public function webrtcDetails()
     {
         $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaffById($staffId);
+        $kerioStaff = $this->kerio_staff_model->getKerioStaff($staffId);
 
         $responseWebrtc = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getWebrtc', []);
         $responseGetUserTicket = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'Session.getUserTicket', []);

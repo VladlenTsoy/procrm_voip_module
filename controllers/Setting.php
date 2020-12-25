@@ -180,5 +180,14 @@ class Setting extends AdminController
         ];
         echo json_encode($data);
     }
+
+    public function checkSip()
+    {
+        $staffId = get_staff_user_id();
+        $staff = $this->staff_model->get($staffId);
+        echo json_encode([
+            'sip' => isset($staff->sip_telephone) ? $staff->sip_telephone : null
+        ]);
+    }
 }
 

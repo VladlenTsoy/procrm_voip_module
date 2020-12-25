@@ -457,9 +457,21 @@ class ProcrmVoipPhoneDropdown {
     }
 }
 
+(async () => {
+    if (localStorage.getItem('PROCRM_VOIP_CURRENT_SIP')) {
+        const phone = new ProcrmVoipPhoneDropdown({sip: localStorage.getItem('PROCRM_VOIP_CURRENT_SIP')})
+        phone.start()
+    } else {
+        const response = await $.ajax({
+            url: admin_url + 'procrm_voip/setting/checkSip',
+            method: 'get',
+            dataType: 'json'
+        })
 
-if (localStorage.getItem('PROCRM_VOIP_CURRENT_SIP')) {
-    const phone = new ProcrmVoipPhoneDropdown({sip: localStorage.getItem('PROCRM_VOIP_CURRENT_SIP')})
-
-    phone.start()
-}
+        if (response.sip) {
+            localStorage.setItem('PROCRM_VOIP_CURRENT_SIP', response.sip)
+            const phone = new ProcrmVoipPhoneDropdown({sip: response.sip})
+            phone.start()
+        }
+    }
+})()

@@ -14,6 +14,7 @@ class Setting extends AdminController
     {
         parent::__construct();
         $this->kerioApi = new KerioOperatorApi();
+        $this->load->model('staff_model');
         $this->load->model('Procrm_voip_kerio_staff_model', 'kerio_staff_model');
     }
 
@@ -36,8 +37,7 @@ class Setting extends AdminController
      */
     public function _auth()
     {
-        $data = ['title' => 'Авторизация PROCRM VoIP'];
-        $data = [];
+        $data = ['title' => _l('authorization') . ' PROCRM VoIP'];
         $this->load->view('setting/auth', $data);
     }
 
@@ -49,14 +49,15 @@ class Setting extends AdminController
     {
         $responseWebrtc = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getWebrtc', []);
         $responseContacts = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserPhone.getAddressBook', []);
-        $responseUserSetting = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'UserSettings.get', []);
+
+        $staff = $this->staff_model->get('', ['active' => 1]);
 
         $data = [
-            'title' => 'Настройка PROCRM VoIP',
+            'title' => _l('settings') . ' PROCRM VoIP',
             'kerio' => $kerioStaff,
             'webrtc' => $responseWebrtc['result'],
-            'userSetting' => $responseUserSetting['result'],
             'contacts' => $responseContacts['result'],
+            'staff' => $staff,
         ];
 
         $this->load->view('setting/details', $data);
@@ -96,6 +97,24 @@ class Setting extends AdminController
 
             $this->load->view('setting/auth', $data);
         }
+    }
+
+    /**
+     * Обновление настроек
+     */
+    public function update()
+    {
+        $data = $this->input->post();
+
+        if (isset($data['telephone'])) {
+            foreach ($data['telephone'] as $key => $val) {
+                if ($this->db->field_exists('sip_telephone', db_prefix() . 'staff')) {
+                    $this->db->where('staffid', $key);
+                    $this->db->update(db_prefix() . 'staff', ['sip_telephone' => $val]);
+                }
+            }
+        }
+        redirect(admin_url('procrm_voip/setting'));
     }
 
     /**

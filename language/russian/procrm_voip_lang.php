@@ -24,4 +24,10 @@ $lang['login']                                          = 'Логин';
 $lang['password']                                       = 'Пароль';
 $lang['logIn']                                          = 'Авторизоваться';
 $lang['error']                                          = 'Ошибка';
+$lang['create']                                         = 'Создать';
+$lang['administrator']                                  = 'Администратор';
+$lang['access']                                         = 'Доступ';
+$lang['connected']                                      = 'Подключен';
+$lang['status']                                         = 'Статус';
+$lang['logout']                                         = 'Выключить телефонию';
 

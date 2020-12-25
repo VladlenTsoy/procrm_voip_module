@@ -13,11 +13,9 @@ class Procrm_voip_kerio_staff_model extends App_Model
 {
     /**
      * Вывод по $staffId авторизацию
-     * @param $staffId
      * @return bool
      */
-    public function getKerioStaffById ($staffId) {
-        $this->db->where('staff_id', $staffId);
+    public function getKerioStaff () {
         $result = $this->db->get(db_prefix() . 'procrm_voip_kerio_staff')->row();
         if ($result) {
             return $result;

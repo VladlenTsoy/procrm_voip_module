@@ -162,8 +162,7 @@ class Recorded extends History
         // Дата
         $row[] = date('H:i d-m-Y', $column['started']);
         //
-        $row[] = '<button type="button" class="btn btn-primary btn-recorded-play" data-recorded-id="' . $column['id'] . '" style="margin-right: 0.5rem"><i class="fa fa-play"></i></button>'
-            . '<button type="button" class="btn" data-recorded-id="' . $column['id'] . '"><i class="fa fa-download"></i></button>';
+        $row[] = '<button type="button" class="btn btn-primary btn-recorded-play" data-recorded-id="' . $column['id'] . '" style="margin-right: 0.5rem"><i class="fa fa-play"></i></button>';
         return $row;
     }
 

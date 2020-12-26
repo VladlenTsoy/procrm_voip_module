@@ -59,10 +59,15 @@
                                             <td>
                                                 <select class="form-control"
                                                         name="telephone[<?php echo $val['staffid'] ?>]">
+                                                    <option <?php if ($val['sip_telephone'] === null) echo 'selected' ?> value="empty">
+                                                        <?php echo _l('empty') ?>
+                                                    </option>
                                                     <?php foreach ($contacts['addressBook'] as $contact) { ?>
                                                         <optgroup label="<?php echo $contact['fullName'] ?>">
                                                             <?php foreach ($contact['numbers'] as $number) { ?>
-                                                                <option <?php if ($val['sip_telephone'] === $number['telNum']) echo 'selected' ?>>
+                                                                <option <?php if ($val['sip_telephone'] === $number['telNum']) echo 'selected' ?>
+                                                                    value="<?php echo $number['telNum'] ?>"
+                                                                >
                                                                     <?php echo $number['telNum'] ?>
                                                                 </option>
                                                             <?php } ?>

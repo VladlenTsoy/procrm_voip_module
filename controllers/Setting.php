@@ -110,7 +110,8 @@ class Setting extends AdminController
             foreach ($data['telephone'] as $key => $val) {
                 if ($this->db->field_exists('sip_telephone', db_prefix() . 'staff')) {
                     $this->db->where('staffid', $key);
-                    $this->db->update(db_prefix() . 'staff', ['sip_telephone' => $val]);
+                    $sip = $val === 'empty' ? null : $val;
+                    $this->db->update(db_prefix() . 'staff', ['sip_telephone' => $sip]);
                 }
             }
         }

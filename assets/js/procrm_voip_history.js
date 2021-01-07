@@ -1,9 +1,9 @@
 $(function () {
     const StaffServerParams = {
-        staff_ids:  '[name="staff_ids"]'
+        staff_ids: '[name="staff_ids"]'
     }
 
-    const table = initDataTable(`.table-voip-history`, admin_url + `procrm_voip/history/table`, undefined, [0, 2, 3, 5], StaffServerParams, [6, 'desc']);
+    const table = initDataTable(`.table-voip-history`, admin_url + `procrm_voip/history/table`, undefined, [2, 3, 6, 7], StaffServerParams, [0, 'desc']);
 
     $('#form-filter-staff').submit(function (e) {
         e.preventDefault()

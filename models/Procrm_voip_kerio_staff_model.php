@@ -1,21 +1,15 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-/*
-Module Name: PROCRM VoIP Module
-Description: PROCRM VoIP module description.
-Author: Tsoy Vladlen
-Author URI: http://procrm.uz
-Version: 2.3.0
-Requires at least: 2.3.*
-*/
 
 class Procrm_voip_kerio_staff_model extends App_Model
 {
+
     /**
      * Вывод по $staffId авторизацию
      * @return bool
      */
-    public function getKerioStaff () {
+    public function getKerioStaff()
+    {
         $result = $this->db->get(db_prefix() . 'procrm_voip_kerio_staff')->row();
         if ($result) {
             return $result;

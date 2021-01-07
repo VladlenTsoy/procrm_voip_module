@@ -3,10 +3,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
     Module Name: PROCRM VoIP Module
-    Description: PROCRM VoIP module description.
+    Description: PROCRM VoIP module - connection to asterisk.
     Author: Tsoy Vladlen
     Author URI: http://procrm.uz
-    Version: 2.3.0
+    Version: 1.0.0
     Requires at least: 2.3.*
 */
 
@@ -26,43 +26,28 @@ $CI = &get_instance();
 $CI->load->helper(PROCRM_VOIP_MODULE_NAME . '/procrm_voip');
 
 /**
- * Установить кнопку в меню
+ * Установить меню
  */
 function procrm_voip_init_menu_items()
 {
-    if (is_admin() || has_permission(PROCRM_VOIP_MODULE_NAME, '', 'view')) {
-        $CI = &get_instance();
+    $CI = &get_instance();
 
-        $CI->app_menu->add_sidebar_menu_item('procrm_voip_menu', [
+    // Настройки для администратора
+    if (is_admin()) {
+        $CI->app_menu->add_setup_menu_item('procrm_voip_setting', [
             'name' => _l('voip_telephony'),
-            'collapse' => true,
-            'position' => 10,
-            'icon' => 'fa fa-phone',
-        ]);
-
-        $CI->app_menu->add_sidebar_children_item('procrm_voip_menu', [
-            'slug' => 'procrm_voip_sub_menu_history',
-            'name' => _l('call_history'),
-            'href' => admin_url('procrm_voip/history'),
-            'position' => 11,
-            'icon' => 'fa fa-history',
-        ]);
-
-        $CI->app_menu->add_sidebar_children_item('procrm_voip_menu', [
-            'slug' => 'procrm_voip_sub_menu_recorded',
-            'name' => _l('call_recorded'),
-            'href' => admin_url('procrm_voip/recorded'),
-            'position' => 11,
-            'icon' => 'fa fa-microphone',
+            'href' => admin_url('procrm_voip/settings'),
+            'position' => 30,
         ]);
     }
-    if (is_admin() || has_permission(PROCRM_VOIP_MODULE_NAME, '', 'setting')) {
-        $CI->app_menu->add_sidebar_children_item('procrm_voip_menu', [
-            'slug' => 'procrm_voip_sub_menu_setting',
-            'name' => _l('settings'),
-            'href' => admin_url('procrm_voip/setting'),
-            'position' => 12,
-            'icon' => 'fa fa-cog',
+
+    // Вывод истории звонков
+    if (is_admin() || has_permission(PROCRM_VOIP_MODULE_NAME, '', 'history')) {
+        $CI->app_menu->add_sidebar_menu_item('procrm_voip_history', [
+            'name' => _l('call_history'),
+            'href' => admin_url('procrm_voip/history'),
+            'icon' => 'fa fa-history',
+            'position' => 10,
         ]);
     }
 }
@@ -72,13 +57,12 @@ function procrm_voip_init_menu_items()
  * @param $data
  * @return mixed
  */
-function procrm_voip_init_permissions ($data) {
-
+function procrm_voip_init_permissions($data)
+{
     $data[PROCRM_VOIP_MODULE_NAME] = [
-        'name'         => _l('voip_telephony'),
+        'name' => _l('voip_telephony'),
         'capabilities' => [
-            'view' => _l('permission_view'),
-            'setting' => _l('permission_setting'),
+            'history' => _l('call_history'),
             'recorded' => _l('call_recorded'),
         ],
     ];
@@ -93,7 +77,6 @@ register_activation_hook(PROCRM_VOIP_MODULE_NAME, 'procrm_voip_module_activation
 
 function procrm_voip_module_activation_hook()
 {
-    $CI = &get_instance();
     require_once(__DIR__ . '/install.php');
 }
 

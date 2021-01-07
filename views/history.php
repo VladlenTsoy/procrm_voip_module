@@ -14,18 +14,19 @@
                     <div class="panel-body">
                         <h3 class="no-margin"><?php _l('call_history') ?></h3>
                         <hr class="hr-panel-heading"/>
-                        <?php if (!$kerio) { ?>
+                        <?php if (false) { ?>
                             <?php include('blocks/alert_auth_required.php') ?>
                         <?php } ?>
 
                         <?php echo render_datatable([
-                            _l('type'),
-                            _l('status'),
-                            _l('contact'),
-                            _l('telephone'),
-                            _l('duration'),
-                            _l('staff'),
-                            _l('time')
+                            _l('Дата'),
+                            _l('Тип'),
+                            _l('Абонент'),
+                            _l('Сотрудник'),
+                            _l('Ожидание'),
+                            _l('Длительность'),
+                            _l('Статус'),
+                            _l('Запись')
                         ],
                             'voip-history'
                         ) ?>
@@ -47,7 +48,7 @@
                                             <?php echo render_select(
                                                 'filter_staff',
                                                 $staff,
-                                                ['staffid', 'full_name'],
+                                                ['sip_telephone', 'full_name'],
                                                 'staff',
                                                 '',
                                                 ['multiple' => true],

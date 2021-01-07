@@ -1,20 +1,13 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-require_once(dirname(__FILE__) . '/../libraries/KerioOperatorApi.php');
 
 class History extends AdminController
 {
-    /**
-     * @var KerioOperatorApi
-     */
-    private $kerioApi;
-
     public function __construct()
     {
         parent::__construct();
-        $this->kerioApi = new KerioOperatorApi();
-        $this->load->model('Procrm_voip_kerio_staff_model', 'kerio_staff_model');
+        $this->load->model('Procrm_voip_asterisk_cdr_model', 'cdr_model');
         $this->load->model('staff_model');
         $this->load->model('leads_model');
     }
@@ -24,13 +17,10 @@ class History extends AdminController
      */
     public function index()
     {
-        $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaff($staffId);
-        $staff = $this->staff_model->get('', ['active' => 1]);
-
+//        $staffId = get_staff_user_id();
+        $staff = $this->staff_model->get('', ['active' => 1, 'sip_telephone !=' => 'NULL']);
         $data = [
             'title' => _l('call_history'),
-            'kerio' => $kerioStaff,
             'staff' => $staff,
         ];
 
@@ -38,10 +28,80 @@ class History extends AdminController
     }
 
 
+    public function table()
+    {
+        $post = $this->input->post();
+        $aColumns = ['calldate', 'amaflags', 'src', 'dstchannel', 'duration', 'billsec', 'disposition', 'recordingfile'];
+
+        $response = [
+            'aaData' => [],
+            'draw' => $post['draw'],
+            'iTotalDisplayRecords' => 0,
+            'iTotalRecords' => 0,
+        ];
+
+        $pagination = ['limit' => $post['length'], 'position' => $post['start']];
+        $orders = [];
+
+        foreach ($post['order'] as $order) {
+            $orders[] = ['column' => $aColumns[$order['column']], 'sort' => $order['dir']];
+        }
+
+        $where = [];
+
+        //
+        if (isset($post['staff_ids']) && $post['staff_ids'] !== '') {
+            $where[] = "(src IN (" . $post['staff_ids'] . ") OR dstchannel IN (" . $post['staff_ids'] . ") OR dst IN (" . $post['staff_ids'] . ") OR cnum IN (" . $post['staff_ids'] . "))";
+        }
+
+        // Поиск
+        if (isset($post['search']) && $post['search']['value'] !== '') {
+            $where[] = "(src LIKE '%" . $post['search']['value'] . "%' OR dstchannel LIKE '%" . $post['search']['value'] . "%' OR dst LIKE '%" . $post['search']['value'] . "%' OR cnum LIKE '%" . $post['search']['value'] . "%')";
+        }
+
+        list($result, $count) = $this->cdr_model->getCdrTable($where, $pagination, $orders);
+
+        $outputData = [];
+
+        if ($result)
+            foreach ($result as $item) {
+                $row = [];
+
+                // Время
+                $row[] = date('H:i d-m-Y', strtotime($item['calldate']));
+                // Тип
+                $row[] = $item['amaflags'] === '2' ? '<i class="fa fa-arrow-down text-success"></i> ' . _l('incoming') : '<i class="fa fa-arrow-up text-danger"></i> ' . _l('outgoing');
+                // Абонент / Сотрудник
+                if ($item['amaflags'] === '2') {
+                    $row[] = $this->_columnLeadView($item['src']);
+                    $row[] = $this->_findStaff(substr($item['dstchannel'], 4, 3));
+                } else {
+                    $row[] = $this->_columnLeadView($item['dst']);
+                    $row[] = $this->_findStaff($item['cnum']);
+                }
+                //
+                $row[] = $item['duration'] - $item['billsec'];
+                $row[] = $item['billsec'];
+                $row[] = procrm_voip_call_status($item['lastapp'], $item['disposition']);
+                if (isset($item['recordingfile']) && $item['recordingfile']) {
+                    $row[] = '<button class="btn btn-primary" data-recordingfile="' . $item['recordingfile'] . '"><i class="fa fa-play"></i></button>';
+                } else {
+                    $row[] = null;
+                }
+                $outputData[] = $row;
+            }
+
+        $response['aaData'] = $outputData;
+        $response['iTotalRecords'] = $count;
+        $response['iTotalDisplayRecords'] = $count;
+
+        echo json_encode($response);
+    }
+
     /**
      * Вывод таблицы
      */
-    public function table()
+    public function tableold()
     {
         $data = $this->input->post();
 
@@ -102,7 +162,7 @@ class History extends AdminController
                     }
             }
 
-            $resCallHistory = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'CallHistory.get', ['query' => $query]);
+//            $resCallHistory = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'CallHistory.get', ['query' => $query]);
 
             if (isset($resCallHistory['result']) && $resCallHistory['result']['totalItems'] > 0) {
                 $calls = isset($resCallHistory['result']['callHistory']) ? $resCallHistory['result']['callHistory'] : [];

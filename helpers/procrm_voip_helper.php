@@ -1,14 +1,18 @@
 <?php
-/*
-Module Name: PROCRM VoIP Module
-Description: PROCRM VoIP module description.
-Author: Tsoy Vladlen
-Author URI: http://procrm.uz
-*/
 
 defined('BASEPATH') or exit('No direct script access allowed');
-define('PROCRM_VOIP_VERSIONING', '2.6.2');
+define('PROCRM_VOIP_VERSIONING', '1.0.0');
 
+$CI = &get_instance();
+
+$config['hostname'] = '91.203.174.201';
+$config['port'] = '55039';
+$config['username'] = 'cdr-read';
+$config['password'] = '777.dmin';
+$config['database'] = 'asteriskcdrdb';
+$config['dbdriver'] = 'mysqli';
+
+$CI->db_asterisk = $CI->load->database($config, TRUE);
 
 if (staff_can('view', PROCRM_VOIP_MODULE_NAME)) {
     hooks()->add_action('app_admin_head', 'procrm_voip_add_head_components');
@@ -42,24 +46,24 @@ function procrm_voip_load_js()
 }
 
 /**
- * @param $statusId
+ * @param $lastapp
+ * @param $status
  * @return string
  */
-function procrm_voip_call_status($statusId)
+function procrm_voip_call_status($lastapp, $status)
 {
-    switch ($statusId) {
-        case 1:
-            return 'Сбой вызова';
-        case 2:
-            return 'Занят';
-        case 3:
-            return 'Не отвечает';
-        case 4:
-            return 'Отвечено';
-        case 5:
-            return 'Вызов запрещен';
-        case 6:
-            return 'Отвечен по голосовой почте';
-    }
-    return $statusId;
+    if ($lastapp === 'BackGround')
+        return 'Привествие';
+    else
+        switch ($status) {
+            case 'FAILED':
+                return 'Сбой вызова';
+            case 'BUSY':
+                return 'Занят';
+            case 'NO ANSWER':
+                return 'Не отвечает';
+            case 'ANSWERED':
+                return 'Отвечено';
+        }
+    return $status;
 }

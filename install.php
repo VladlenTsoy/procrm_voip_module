@@ -1,56 +1,26 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-if (!$CI->db->table_exists(db_prefix() . 'procrm_voip_sip_staff')) {
-    $CI->db->query('CREATE TABLE `' . db_prefix() . "procrm_voip_sip_staff` (
-  `id` int(11) NOT NULL,
-  `staff_id` int(11) NOT NULL,
-  `caller_id` varchar(150),
-  `status` varchar(150)
-) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
+$CI = &get_instance();
 
-    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_sip_staff`
-  ADD PRIMARY KEY (`id`);');
+// Создание таблицы AMI авторизации
+//if (!$CI->db->table_exists(db_prefix() . 'procrm_voip_ami_auth')) {
+//    $CI->db->query('CREATE TABLE `' . db_prefix() . "procrm_voip_ami_auth` (
+//  `id` int(11) NOT NULL,
+//  `ip` varchar(150) NOT NULL,
+//  `port` int(11) NOT NULL,
+//  `login` varchar(150) NOT NULL,
+//  `password` varchar(150) NOT NULL
+//) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
+//
+//    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_ami_auth`
+//  ADD PRIMARY KEY (`id`);');
+//
+//    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_ami_auth`
+//  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT');
+//}
 
-    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_sip_staff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT');
-}
-
-if (!$CI->db->table_exists(db_prefix() . 'procrm_voip_calls')) {
-    $CI->db->query("CREATE TABLE `" . db_prefix() . "procrm_voip_calls` (
-  `id` int(11) NOT NULL,
-  `channel` varchar(150) NOT NULL,
-  `caller_id` varchar(150) NOT NULL,
-  `exten` int(11) NOT NULL,
-  `status` int(11) NOT NULL,
-  `call_created_at` datetime NOT NULL,
-  `call_end_at` datetime,
-  `audio_path` varchar(150)
-) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ";");
-
-    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_calls`
-  ADD PRIMARY KEY (`id`);');
-
-    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_calls`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT');
-}
-
-if (!$CI->db->table_exists(db_prefix() . 'procrm_voip_kerio_staff')) {
-    $CI->db->query('CREATE TABLE `' . db_prefix() . "procrm_voip_kerio_staff` (
-  `id` int(11) NOT NULL,
-  `staff_id` int(11) NOT NULL,
-  `domain` varchar(150) NOT NULL,
-  `login` varchar(150) NOT NULL,
-  `password` varchar(150) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
-
-    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_kerio_staff`
-  ADD PRIMARY KEY (`id`);');
-
-    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_kerio_staff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT');
-}
-
+// Добавление столбца в staff
 if (!$CI->db->field_exists('sip_telephone', db_prefix() . 'staff')) {
     $CI->db->query('ALTER TABLE `' . db_prefix() . 'staff` ADD `sip_telephone` INT(11) NULL AFTER `email_signature`;');
 }

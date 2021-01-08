@@ -3,28 +3,26 @@
 $lang['voip_telephony']                                 = 'VoIP Телефония';
 $lang['call_history']                                   = 'История звонков';
 $lang['call_recorded']                                  = 'Запись звонков';
+// ??
 $lang['authorization_required']                         = 'Требуется авторизация';
 $lang['authorization']                                  = 'Авторизация';
 $lang['go_to_the_voip_telephony_section']               = 'Перейдите в раздел VoIP Телефония';
 $lang['for_authorization']                              = 'для авторизации';
-
-
 $lang['domain']                                         = 'Домен';
 $lang['login']                                          = 'Логин';
 $lang['password']                                       = 'Пароль';
 $lang['logIn']                                          = 'Авторизоваться';
 $lang['error']                                          = 'Ошибка';
-$lang['create']                                         = 'Создать';
 $lang['administrator']                                  = 'Администратор';
 $lang['access']                                         = 'Доступ';
 $lang['connected']                                      = 'Подключен';
 $lang['logout']                                         = 'Выключить телефонию';
-$lang['today']                                          = 'Сегодня';
 
 // История
 $lang['form_date']                                      = 'С какого';
 $lang['to_date']                                        = 'По какое';
 
+// Модальное окно записи. заголовок
 $lang['call_recording']                                 = 'Запись звонка';
 
 // Типы
@@ -41,6 +39,10 @@ $lang['contact']                                        = 'Контакт';
 $lang['telephone']                                      = 'Номер';
 $lang['expectation']                                    = 'Ожидание';
 $lang['record']                                         = 'Запись';
+
+// строки
+$lang['create']                                         = 'Создать';
+$lang['today']                                          = 'Сегодня';
 
 // Статусы
 $lang['greeting']                                       = 'Приветствие';

@@ -125,7 +125,7 @@ class History extends AdminController
     public function _columnLeadView($num)
     {
         $num = preg_replace('/[^0-9]/', '', $num);
-        $contact = '<a href="javascript:init_lead()"><i class="fa fa-plus"></i> ' . _l('create') . '</a>';
+        $contact = '<a href="javascript:init_tel_lead(' . $num . ')"><i class="fa fa-plus"></i> ' . _l('create') . '</a>';
         $lead = $this->_findLead($num);
         if ($lead) {
             $contact = '<a href="javascript:init_lead(' . $lead['id'] . ')">' . $lead['name'] . '</a>';

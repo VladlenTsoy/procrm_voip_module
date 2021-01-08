@@ -47,7 +47,16 @@ $(function () {
         source.src = 'https://procrm.loc/admin/procrm_voip/history/DownloadAudioContent?file=' + file;
     })
 
-    $('#voip_recorded_audio_modal').on('hidden.bs.modal', function (e) {
+    $('#voip_recorded_audio_modal').on('hidden.bs.modal', function () {
         source.src = null
     })
 });
+
+// Создать лид с телефоном
+function init_tel_lead(tel) {
+    init_lead();
+
+    $('#lead-modal').on('show.bs.modal', function (e) {
+        $(e.currentTarget).find('#phonenumber').val(tel)
+    })
+}

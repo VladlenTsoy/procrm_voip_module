@@ -89,11 +89,12 @@ class History extends AdminController
                 if ($item['amaflags'] === '2') {
                     $row[] = $this->_columnLeadView($item['src']);
                     $row[] = procrm_voip_phone_to_display($item['src']);
-                    $row[] = $this->_findStaff(substr($item['dstchannel'], 4, 3));
+                    $sip = substr($item['dstchannel'], 4, 3);
+                    $row[] = $this->_findStaff($sip) ?? $sip;
                 } else {
                     $row[] = $this->_columnLeadView($item['dst']);
                     $row[] = procrm_voip_phone_to_display($item['dst']);
-                    $row[] = $this->_findStaff($item['cnum']);
+                    $row[] = $this->_findStaff($item['cnum']) ?? $item['cnum'];
                 }
                 // Ожидание
                 $row[] = procrm_voip_sec_to_display($item['duration'] - $item['billsec']);
@@ -127,11 +128,10 @@ class History extends AdminController
         $num = preg_replace('/[^0-9]/', '', $num);
         $contact = '<a href="javascript:init_tel_lead(' . $num . ')"><i class="fa fa-plus"></i> ' . _l('create') . '</a>';
         $lead = $this->_findLead($num);
-        if ($lead) {
+        if ($lead)
             $contact = '<a href="javascript:init_lead(' . $lead['id'] . ')">' . $lead['name'] . '</a>';
-        } else {
+        else
             $contact = $this->_findStaff($num) ?? $contact;
-        }
 
         return $contact;
     }

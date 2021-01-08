@@ -1,5 +1,5 @@
 <?php
-
+// Основное
 $lang['voip_telephony']                                 = 'VoIP Телефония';
 $lang['call_history']                                   = 'История звонков';
 $lang['call_recorded']                                  = 'Запись звонков';
@@ -8,7 +8,6 @@ $lang['authorization']                                  = 'Авторизаци�
 $lang['go_to_the_voip_telephony_section']               = 'Перейдите в раздел VoIP Телефония';
 $lang['for_authorization']                              = 'для авторизации';
 
-$lang['call_recording']                                 = 'Запись звонка';
 
 $lang['domain']                                         = 'Домен';
 $lang['login']                                          = 'Логин';
@@ -25,6 +24,8 @@ $lang['today']                                          = 'Сегодня';
 // История
 $lang['form_date']                                      = 'С какого';
 $lang['to_date']                                        = 'По какое';
+
+$lang['call_recording']                                 = 'Запись звонка';
 
 // Типы
 $lang['incoming']                                       = 'Входящий';

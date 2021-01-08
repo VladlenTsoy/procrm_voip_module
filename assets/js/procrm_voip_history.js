@@ -6,8 +6,9 @@ $(function () {
         to_date: '[name="to_date"]',
     }
 
-    const table = initDataTable(`.table-voip-history`, admin_url + `procrm_voip/history/table`, undefined, [2, 3, 6, 7], StaffServerParams, [0, 'desc']);
+    const table = initDataTable(`.table-voip-history`, admin_url + `procrm_voip/history/table`, undefined, [2, 3, 4, 7, 8], StaffServerParams, [0, 'desc']);
 
+    // Фильтрация
     $('#form-filter-staff').submit(function (e) {
         e.preventDefault()
         const form = $('#form-filter-staff').serializeArray()
@@ -25,11 +26,6 @@ $(function () {
                     return dateTo = item.value
             }
         })
-        console.log(form, staffIds
-        ,statuses
-        ,dateFrom
-        ,dateTo)
-
 
         $('[name="staff_ids"]').val(staffIds)
         $('[name="statuses"]').val(statuses)
@@ -38,5 +34,20 @@ $(function () {
 
         table.ajax.reload();
         $('#voip_history_modal_action').modal('hide')
+    })
+
+    const source = document.getElementById('audio-recorded');
+
+    // Запись
+    $(document).on('click', '.btn-recorded-play', async function (e) {
+        console.log(e.currentTarget.dataset)
+        const {file} = e.currentTarget.dataset
+        $('#voip_recorded_audio_modal').modal('show')
+
+        source.src = 'https://procrm.loc/admin/procrm_voip/history/DownloadAudioContent?file=' + file;
+    })
+
+    $('#voip_recorded_audio_modal').on('hidden.bs.modal', function (e) {
+        source.src = null
     })
 });

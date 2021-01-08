@@ -56,10 +56,12 @@ class History extends AdminController
             $where[] = "(src IN (" . $post['staff_ids'] . ") OR dstchannel IN (" . $post['staff_ids'] . ") OR dst IN (" . $post['staff_ids'] . ") OR cnum IN (" . $post['staff_ids'] . "))";
         }
 
+        // Фильтрация статусы
         if (isset($post['statuses']) && $post['statuses'] !== '') {
             $where[] = '(disposition IN ("' . str_replace(',', '","', $post['statuses']) . '"))';
         }
 
+        // Фильтрация по дате
         if (isset($post['from_date']) && $post['from_date'] !== '' || isset($post['to_date']) && $post['to_date'] !== '') {
             $dateFrom = isset($post['from_date']) && $post['from_date'] ? $post['from_date'] : '0000-00-00';
             $dateTo = isset($post['to_date']) && $post['to_date'] !== '' ? date('Y-m-d', strtotime($post['to_date'] . ' + 1 day')) : date('Y-m-d', strtotime('+ 1 day'));
@@ -100,9 +102,10 @@ class History extends AdminController
                 // Статус
                 $row[] = procrm_voip_call_status($item['lastapp'], $item['disposition']);
                 // Запись
-                if (isset($item['recordingfile']) && $item['recordingfile'])
-                    $row[] = '<button class="btn btn-primary" data-recordingfile="' . $item['recordingfile'] . '"><i class="fa fa-play"></i></button>';
-                else
+                if (isset($item['recordingfile']) && $item['recordingfile']) {
+                    $file = '/var/spool/asterisk/monitor/' . date('Y/m/d', strtotime($item['calldate'])) . '/' . $item['recordingfile'];
+                    $row[] = '<button class="btn btn-primary btn-recorded-play" data-file="' . $file . '"><i class="fa fa-play"></i></button>';
+                } else
                     $row[] = null;
                 $outputData[] = $row;
             }
@@ -183,5 +186,30 @@ class History extends AdminController
             'id' => $leads[0]['id'],
             'name' => $leads[0]['name'],
         ] : null;
+    }
+
+    /**
+     *
+     */
+    public function DownloadAudioContent()
+    {
+        $file = $this->input->get('file');
+//        $file = 'C:\in-781138772-901894326-20210108-151410-1610100850.1669.wav';
+        $mime_type = "audio/x-wav, audio/x-aiff, audio/x-aiff, audio/mpeg";
+
+        if (file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header("Content-Type: {$mime_type}");
+            header('Content-Length: ' . filesize($file));
+            header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+            header('X-Pad: avoid browser bug');
+            header('Cache-Control: must-revalidate');
+            header('Content-Transfer-Encoding: binary');
+            header('Pragma: public');
+            header('Expires: 0');
+            readfile($file);
+        } else {
+            header("HTTP/1.0 404 Not Found");
+        }
     }
 }

@@ -27,11 +27,13 @@ class History extends AdminController
         $this->load->view('history', $data);
     }
 
-
+    /**
+     * Таблица
+     */
     public function table()
     {
         $post = $this->input->post();
-        $aColumns = ['calldate', 'amaflags', 'src', 'dstchannel', 'duration', 'billsec', 'disposition', 'recordingfile'];
+        $aColumns = ['calldate', 'amaflags', 'src', 'dstchannel', 'dstchannel', 'duration', 'billsec', 'disposition', 'recordingfile'];
 
         $response = [
             'aaData' => [],
@@ -40,21 +42,20 @@ class History extends AdminController
             'iTotalRecords' => 0,
         ];
 
-        $pagination = ['limit' => $post['length'], 'position' => $post['start']];
         $orders = [];
+        $where = [];
+        $pagination = ['limit' => $post['length'], 'position' => $post['start']];
 
         foreach ($post['order'] as $order) {
             $orders[] = ['column' => $aColumns[$order['column']], 'sort' => $order['dir']];
         }
 
-        $where = [];
-
-        //
+        // Сортировка по сотрудникам
         if (isset($post['staff_ids']) && $post['staff_ids'] !== '') {
             $where[] = "(src IN (" . $post['staff_ids'] . ") OR dstchannel IN (" . $post['staff_ids'] . ") OR dst IN (" . $post['staff_ids'] . ") OR cnum IN (" . $post['staff_ids'] . "))";
         }
 
-        // Поиск
+        // Поиск по номерам
         if (isset($post['search']) && $post['search']['value'] !== '') {
             $where[] = "(src LIKE '%" . $post['search']['value'] . "%' OR dstchannel LIKE '%" . $post['search']['value'] . "%' OR dst LIKE '%" . $post['search']['value'] . "%' OR cnum LIKE '%" . $post['search']['value'] . "%')";
         }
@@ -68,26 +69,30 @@ class History extends AdminController
                 $row = [];
 
                 // Время
-                $row[] = date('H:i d-m-Y', strtotime($item['calldate']));
+                $row[] = procrm_voip_date_to_display($item['calldate']);
                 // Тип
                 $row[] = $item['amaflags'] === '2' ? '<i class="fa fa-arrow-down text-success"></i> ' . _l('incoming') : '<i class="fa fa-arrow-up text-danger"></i> ' . _l('outgoing');
                 // Абонент / Сотрудник
                 if ($item['amaflags'] === '2') {
                     $row[] = $this->_columnLeadView($item['src']);
+                    $row[] = procrm_voip_phone_to_display($item['src']);
                     $row[] = $this->_findStaff(substr($item['dstchannel'], 4, 3));
                 } else {
                     $row[] = $this->_columnLeadView($item['dst']);
+                    $row[] = procrm_voip_phone_to_display($item['dst']);
                     $row[] = $this->_findStaff($item['cnum']);
                 }
-                //
-                $row[] = $item['duration'] - $item['billsec'];
-                $row[] = $item['billsec'];
+                // Ожидание
+                $row[] = procrm_voip_sec_to_display($item['duration'] - $item['billsec']);
+                // Длительность
+                $row[] = procrm_voip_sec_to_display($item['billsec']);
+                // Статус
                 $row[] = procrm_voip_call_status($item['lastapp'], $item['disposition']);
-                if (isset($item['recordingfile']) && $item['recordingfile']) {
+                // Запись
+                if (isset($item['recordingfile']) && $item['recordingfile'])
                     $row[] = '<button class="btn btn-primary" data-recordingfile="' . $item['recordingfile'] . '"><i class="fa fa-play"></i></button>';
-                } else {
+                else
                     $row[] = null;
-                }
                 $outputData[] = $row;
             }
 
@@ -96,142 +101,6 @@ class History extends AdminController
         $response['iTotalDisplayRecords'] = $count;
 
         echo json_encode($response);
-    }
-
-    /**
-     * Вывод таблицы
-     */
-    public function tableold()
-    {
-        $data = $this->input->post();
-
-        $staffId = get_staff_user_id();
-        $kerioStaff = $this->kerio_staff_model->getKerioStaff($staffId);
-
-        $response = [
-            'aaData' => [],
-            'draw' => $data['draw'],
-            'iTotalDisplayRecords' => 0,
-            'iTotalRecords' => 0,
-        ];
-
-        if ($kerioStaff) {
-            // Параметры для запроса
-            $query = [
-                'start' => $data['start'],
-                'limit' => $data['length'],
-                'conditions' => [],
-            ];
-
-            // Поиск
-            if (isset($data['search']) && $data['search']['value'] !== '') {
-                $query['combining'] = 'And';
-                $query['conditions'][] = [
-                    'comparator' => 'Like',
-                    'fieldName' => 'SEARCH',
-                    'value' => $data['search']['value']
-                ];
-            }
-
-            // Сортировка
-            if (isset($data['order'])) {
-                $columnOrder = ['FROM_TYPE', 'STATUS', 'TO_NUM', 'TO_NUM', 'ANSWERED_DURATION', 'TO_NUM', 'TIMESTAMP'];
-                foreach ($data['order'] as $order) {
-                    $query['orderBy'][] = ['columnName' => $columnOrder[$order['column']], 'direction' => ucfirst($order['dir'])];
-                }
-            }
-
-            //
-            if (isset($data['staff_ids']) && $data['staff_ids'] !== '') {
-                $query['combining'] = 'Or';
-                $staff = $this->staff_model->get('', "staffid IN (" . $data['staff_ids'] . ")");
-                if ($staff)
-                    foreach ($staff as $val) {
-                        if ($val['sip_telephone']) {
-                            $query['conditions'][] = [
-                                'comparator' => 'Eq',
-                                'fieldName' => 'TO_NUM',
-                                'value' => $val['sip_telephone']
-                            ];
-                            $query['conditions'][] = [
-                                'comparator' => 'Eq',
-                                'fieldName' => 'FROM_NUM',
-                                'value' => $val['sip_telephone']
-                            ];
-                        }
-                    }
-            }
-
-//            $resCallHistory = $this->kerioApi->loginAndQueryByStaff($kerioStaff, 'CallHistory.get', ['query' => $query]);
-
-            if (isset($resCallHistory['result']) && $resCallHistory['result']['totalItems'] > 0) {
-                $calls = isset($resCallHistory['result']['callHistory']) ? $resCallHistory['result']['callHistory'] : [];
-                $outputData = $this->_columnData($calls);
-                $response['aaData'] = $outputData;
-                $response['iTotalRecords'] = $resCallHistory['result']['totalItems'];
-                $response['iTotalDisplayRecords'] = $resCallHistory['result']['totalItems'];
-                $response['data'] = $data;
-            }
-        }
-
-        echo json_encode($response);
-    }
-
-    /**
-     * Вывод столбца
-     * @param $calls
-     * @return array
-     */
-    public function _columnData($calls)
-    {
-        $outputData = [];
-
-        foreach ($calls as $call) {
-            $data = [
-                'duration' => $call['ANSWERED_DURATION'],
-                'timestamp' => $call['TIMESTAMP'],
-                'status' => $call['STATUS']
-            ];
-            if (strlen($call['FROM_NUM']) > 3) {
-                $data['type'] = 1;
-                $data['staff'] = $call['TO_NUM'];
-                $data['num'] = $call['FROM_NUM'];
-            } else {
-                $data['type'] = 2;
-                $data['staff'] = $call['FROM_NUM'];
-                $data['num'] = $call['TO_NUM'];
-            }
-
-            $outputData[] = $this->_columnDataView($data);
-        }
-
-        return $outputData;
-    }
-
-    /**
-     * Вывод столбца view
-     * @param $column
-     * @return array
-     */
-    public function _columnDataView($column)
-    {
-        $row = [];
-        // Тип
-        $row[] = $column['type'] === 1 ? '<i class="fa fa-arrow-down text-success"></i> ' . _l('incoming') : '<i class="fa fa-arrow-up text-danger"></i> ' . _l('outgoing');
-        // Статус
-        $row[] = procrm_voip_call_status($column['status']);
-        // Лид
-        $row[] = $this->_columnLeadView($column['num']);
-        // Номер телефона
-        $row[] = '<a href="tel:' . $column['num'] . '">' . $column['num'] . '</a>';
-        // Длительность
-        $row[] = $column['duration'] . ' c';
-        // Ответственный
-        $staff = $this->_findStaff($column['staff']);
-        $row[] = $staff ? $staff : $column['staff'];
-        // Дата
-        $row[] = date('H:i d-m-Y', $column['timestamp']);
-        return $row;
     }
 
     /**

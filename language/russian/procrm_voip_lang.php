@@ -1,7 +1,5 @@
 <?php
 
-# Version 2.3.0
-
 $lang['voip_telephony']                                 = 'VoIP Телефония';
 $lang['call_history']                                   = 'История звонков';
 $lang['call_recorded']                                  = 'Запись звонков';
@@ -9,16 +7,9 @@ $lang['authorization_required']                         = 'Требуется а
 $lang['authorization']                                  = 'Авторизация';
 $lang['go_to_the_voip_telephony_section']               = 'Перейдите в раздел VoIP Телефония';
 $lang['for_authorization']                              = 'для авторизации';
-$lang['type']                                           = 'Тип';
-$lang['status']                                         = 'Статус';
-$lang['contact']                                        = 'Контакт';
-$lang['telephone']                                      = 'Номер';
-$lang['duration']                                       = 'Длительность';
-$lang['staff']                                          = 'Сотрудник';
-$lang['time']                                           = 'Время';
+
 $lang['call_recording']                                 = 'Запись звонка';
-$lang['incoming']                                       = 'Входящий';
-$lang['outgoing']                                       = 'Исходящий';
+
 $lang['domain']                                         = 'Домен';
 $lang['login']                                          = 'Логин';
 $lang['password']                                       = 'Пароль';
@@ -28,6 +19,29 @@ $lang['create']                                         = 'Создать';
 $lang['administrator']                                  = 'Администратор';
 $lang['access']                                         = 'Доступ';
 $lang['connected']                                      = 'Подключен';
-$lang['status']                                         = 'Статус';
 $lang['logout']                                         = 'Выключить телефонию';
+$lang['today']                                          = 'Сегодня';
+
+// Типы
+$lang['incoming']                                       = 'Входящий';
+$lang['outgoing']                                       = 'Исходящий';
+
+// Таблица
+$lang['status']                                         = 'Статус';
+$lang['time']                                           = 'Время';
+$lang['type']                                           = 'Тип';
+$lang['duration']                                       = 'Длительность';
+$lang['staff']                                          = 'Сотрудник';
+$lang['contact']                                        = 'Контакт';
+$lang['telephone']                                      = 'Номер';
+$lang['expectation']                                    = 'Ожидание';
+$lang['record']                                         = 'Запись';
+
+// Статусы
+$lang['greeting']                                       = 'Приветствие';
+$lang['call_failed']                                    = 'Сбой вызова';
+$lang['busy']                                           = 'Занят';
+$lang['no_answer']                                      = 'Не отвечает';
+$lang['answered']                                       = 'Отвечено';
+
 

@@ -19,14 +19,15 @@
                         <?php } ?>
 
                         <?php echo render_datatable([
-                            _l('Дата'),
-                            _l('Тип'),
-                            _l('Абонент'),
-                            _l('Сотрудник'),
-                            _l('Ожидание'),
-                            _l('Длительность'),
-                            _l('Статус'),
-                            _l('Запись')
+                            _l('time'),
+                            _l('type'),
+                            _l('contact'),
+                            _l('telephone'),
+                            _l('staff'),
+                            _l('expectation'),
+                            _l('duration'),
+                            _l('status'),
+                            _l('record')
                         ],
                             'voip-history'
                         ) ?>
@@ -45,6 +46,14 @@
                                     </div>
                                     <div class="modal-body">
                                         <form id="form-filter-staff">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <?php echo render_date_input('startdate','task_add_edit_start_date','', []); ?>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <?php echo render_date_input('startend','task_add_edit_start_date','', []); ?>
+                                                </div>
+                                            </div>
                                             <?php echo render_select(
                                                 'filter_staff',
                                                 $staff,

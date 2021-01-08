@@ -5,6 +5,7 @@ define('PROCRM_VOIP_VERSIONING', '1.0.0');
 
 $CI = &get_instance();
 
+//$config['hostname'] = '192.168.5.7';
 $config['hostname'] = '91.203.174.201';
 $config['port'] = '55039';
 $config['username'] = 'cdr-read';
@@ -46,6 +47,7 @@ function procrm_voip_load_js()
 }
 
 /**
+ * Вывод статуса
  * @param $lastapp
  * @param $status
  * @return string
@@ -53,17 +55,91 @@ function procrm_voip_load_js()
 function procrm_voip_call_status($lastapp, $status)
 {
     if ($lastapp === 'BackGround')
-        return 'Привествие';
+        return _l('greeting');
     else
         switch ($status) {
             case 'FAILED':
-                return 'Сбой вызова';
+                return _l('call_failed');
             case 'BUSY':
-                return 'Занят';
+                return _l('busy');
             case 'NO ANSWER':
-                return 'Не отвечает';
+                return _l('no_answer');
             case 'ANSWERED':
-                return 'Отвечено';
+                return _l('answered');
         }
     return $status;
+}
+
+/**
+ * Вывода минут и секунда
+ * @param $secs
+ * @return string
+ */
+function procrm_voip_sec_to_display($secs)
+{
+    $min = floor($secs / 60);
+    $sec = $secs % 60;
+    return ($min > 9 ? $min : '0' . $min) . ':' . ($sec > 9 ? $sec : '0' . $sec);
+}
+
+/**
+ * Вывод номера телефона
+ * @param $number
+ * @return string
+ */
+function procrm_voip_phone_to_display($number)
+{
+    // Allow only Digits, remove all other characters.
+    $number = preg_replace("/[^\d]/", "", $number);
+
+    // get number length.
+    $length = strlen($number);
+
+    // if number = 12
+    if ($length == 12) {
+        $number = preg_replace("/^9?(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})$/", "($1-$2)-$3-$4-$5", $number);
+    } else if ($length == 9) {
+        $number = preg_replace("/^d?(\d{2})(\d{3})(\d{2})(\d{2})$/", "($1)-$2-$3-$4", $number);
+    } else if ($length == 7) {
+        $number = preg_replace("/^d?(\d{3})(\d{2})(\d{2})$/", "$1-$2-$3", $number);
+    }
+
+    return $number;
+}
+
+/**
+ * Вывода даты
+ * @param $date
+ * @return string
+ */
+function procrm_voip_date_to_display($date)
+{
+    $output = '';
+
+    $currentYear = date('Y');
+    $currentMonth = date('m');
+    $currentDay = date('d');
+
+    $selectYear = date('Y', strtotime($date));
+    $selectMonth = date('m', strtotime($date));
+    $selectDay = date('d', strtotime($date));
+
+    $months = ['', 'Январь' , 'Февраль' , 'Март' , 'Апрель' , 'Май' , 'Июнь' , 'Июль' , 'Август' , 'Сентябрь' , 'Октябрь' , 'Ноябрь' , 'Декабрь'];
+
+    if ($selectYear < $currentYear)
+        $output .= $selectDay . '-' . $selectMonth . '-' . $selectYear;
+    else {
+        if ($selectMonth < $currentMonth)
+            $output .= $selectDay . ' ' . $months[(int) $selectMonth];
+        else {
+            if ($selectDay < $currentDay)
+                $output .= $selectDay . ' ' . $months[(int) $selectMonth];
+            else
+                $output .= _l('today');
+        }
+    }
+
+    $output .= ' ' . date('H:i', strtotime($date));
+
+    return $output;
 }

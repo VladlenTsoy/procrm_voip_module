@@ -1,7 +1,7 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-define('PROCRM_VOIP_VERSIONING', '1.0.0');
+define('PROCRM_VOIP_VERSIONING', '1.0.1');
 
 $CI = &get_instance();
 

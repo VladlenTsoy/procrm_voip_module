@@ -44,7 +44,7 @@ $(function () {
         const {file} = e.currentTarget.dataset
         $('#voip_recorded_audio_modal').modal('show')
 
-        source.src = 'https://procrm.loc/admin/procrm_voip/history/DownloadAudioContent?file=' + file;
+        source.src = admin_url + 'procrm_voip/history/DownloadAudioContent?file=' + file;
     })
 
     $('#voip_recorded_audio_modal').on('hidden.bs.modal', function () {

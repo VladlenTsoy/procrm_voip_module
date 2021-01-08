@@ -6,9 +6,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="_filters _hidden_inputs hidden">
-                    <?php
-                    echo form_hidden('staff_ids');
-                    ?>
+                    <?php echo form_hidden('staff_ids');?>
+                    <?php echo form_hidden('statuses');?>
+                    <?php echo form_hidden('from_date');?>
+                    <?php echo form_hidden('to_date');?>
                 </div>
                 <div class="panel_s">
                     <div class="panel-body">
@@ -48,12 +49,21 @@
                                         <form id="form-filter-staff">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <?php echo render_date_input('startdate','task_add_edit_start_date','', []); ?>
+                                                    <?php echo render_date_input('filter_from_date','form_date','', []); ?>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <?php echo render_date_input('startend','task_add_edit_start_date','', []); ?>
+                                                    <?php echo render_date_input('filter_to_date','to_date','', []); ?>
                                                 </div>
                                             </div>
+                                            <?php echo render_select(
+                                                'filter_statuses',
+                                                $statuses,
+                                                ['key', 'value'],
+                                                'status',
+                                                '',
+                                                ['multiple' => true],
+                                                [], '', 'filter_statuses_select', false
+                                            ); ?>
                                             <?php echo render_select(
                                                 'filter_staff',
                                                 $staff,

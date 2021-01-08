@@ -124,16 +124,16 @@ function procrm_voip_date_to_display($date)
     $selectMonth = date('m', strtotime($date));
     $selectDay = date('d', strtotime($date));
 
-    $months = ['', 'Январь' , 'Февраль' , 'Март' , 'Апрель' , 'Май' , 'Июнь' , 'Июль' , 'Август' , 'Сентябрь' , 'Октябрь' , 'Ноябрь' , 'Декабрь'];
+    $months = ['', 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 
     if ($selectYear < $currentYear)
         $output .= $selectDay . '-' . $selectMonth . '-' . $selectYear;
     else {
         if ($selectMonth < $currentMonth)
-            $output .= $selectDay . ' ' . $months[(int) $selectMonth];
+            $output .= $selectDay . ' ' . $months[(int)$selectMonth];
         else {
             if ($selectDay < $currentDay)
-                $output .= $selectDay . ' ' . $months[(int) $selectMonth];
+                $output .= $selectDay . ' ' . $months[(int)$selectMonth];
             else
                 $output .= _l('today');
         }
@@ -142,4 +142,29 @@ function procrm_voip_date_to_display($date)
     $output .= ' ' . date('H:i', strtotime($date));
 
     return $output;
+}
+
+/**
+ * @return array[]
+ */
+function procrm_voip_get_statuses()
+{
+    return [
+        [
+            'key' => 'FAILED',
+            'value' => _l('call_failed')
+        ],
+        [
+            'key' => 'BUSY',
+            'value' => _l('busy')
+        ],
+        [
+            'key' => 'NO ANSWER',
+            'value' => _l('no_answer')
+        ],
+        [
+            'key' => 'ANSWERED',
+            'value' => _l('answered')
+        ],
+    ];
 }

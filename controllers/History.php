@@ -17,11 +17,12 @@ class History extends AdminController
      */
     public function index()
     {
-//        $staffId = get_staff_user_id();
         $staff = $this->staff_model->get('', ['active' => 1, 'sip_telephone !=' => 'NULL']);
+        $statuses = procrm_voip_get_statuses();
         $data = [
             'title' => _l('call_history'),
             'staff' => $staff,
+            'statuses' => $statuses,
         ];
 
         $this->load->view('history', $data);
@@ -53,6 +54,16 @@ class History extends AdminController
         // Сортировка по сотрудникам
         if (isset($post['staff_ids']) && $post['staff_ids'] !== '') {
             $where[] = "(src IN (" . $post['staff_ids'] . ") OR dstchannel IN (" . $post['staff_ids'] . ") OR dst IN (" . $post['staff_ids'] . ") OR cnum IN (" . $post['staff_ids'] . "))";
+        }
+
+        if (isset($post['statuses']) && $post['statuses'] !== '') {
+            $where[] = '(disposition IN ("' . str_replace(',', '","', $post['statuses']) . '"))';
+        }
+
+        if (isset($post['from_date']) && $post['from_date'] !== '' || isset($post['to_date']) && $post['to_date'] !== '') {
+            $dateFrom = isset($post['from_date']) && $post['from_date'] ? $post['from_date'] : '0000-00-00';
+            $dateTo = isset($post['to_date']) && $post['to_date'] !== '' ? date('Y-m-d', strtotime($post['to_date'] . ' + 1 day')) : date('Y-m-d', strtotime('+ 1 day'));
+            $where[] = "(calldate BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "')";
         }
 
         // Поиск по номерам

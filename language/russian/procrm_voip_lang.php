@@ -22,6 +22,10 @@ $lang['connected']                                      = 'Подключен';
 $lang['logout']                                         = 'Выключить телефонию';
 $lang['today']                                          = 'Сегодня';
 
+// История
+$lang['form_date']                                      = 'С какого';
+$lang['to_date']                                        = 'По какое';
+
 // Типы
 $lang['incoming']                                       = 'Входящий';
 $lang['outgoing']                                       = 'Исходящий';

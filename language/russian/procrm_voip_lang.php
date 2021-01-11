@@ -51,3 +51,5 @@ $lang['September']                                      = 'Сентябрь';
 $lang['October']                                        = 'Октябрь';
 $lang['November']                                       = 'Ноябрь';
 $lang['December']                                       = 'Декабрь';
+// Роли
+$lang['telephone']                                      = 'Телефон';

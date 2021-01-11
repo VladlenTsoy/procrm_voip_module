@@ -63,6 +63,7 @@ function procrm_voip_init_permissions($data)
     $data[PROCRM_VOIP_MODULE_NAME] = [
         'name' => _l('voip_telephony'),
         'capabilities' => [
+            'telephone' => _l('telephone'),
             'history' => _l('call_history'),
             'recorded' => _l('call_recorded'),
         ],

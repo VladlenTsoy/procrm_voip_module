@@ -103,7 +103,7 @@ class History extends AdminController
                 // Статус
                 $row[] = procrm_voip_call_status($item['lastapp'], $item['disposition']);
                 // Запись
-                if (isset($item['recordingfile']) && $item['recordingfile']) {
+                if (isset($item['recordingfile']) && $item['recordingfile'] && staff_can('recorded', PROCRM_VOIP_MODULE_NAME)) {
                     $file = '/var/spool/asterisk/monitor/' . date('Y/m/d', strtotime($item['calldate'])) . '/' . $item['recordingfile'];
                     $row[] = '<button class="btn btn-primary btn-recorded-play" data-file="' . $file . '"><i class="fa fa-play"></i></button>';
                 } else

@@ -15,9 +15,6 @@
                     <div class="panel-body">
                         <h3 class="no-margin"><?php echo _l('call_history') ?></h3>
                         <hr class="hr-panel-heading"/>
-                        <?php if (false) { ?>
-                            <?php include('blocks/alert_auth_required.php') ?>
-                        <?php } ?>
 
                         <?php echo render_datatable([
                             _l('time'),

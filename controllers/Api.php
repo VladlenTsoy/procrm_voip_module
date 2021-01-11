@@ -7,9 +7,8 @@ class Api extends AdminController
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Procrm_voip_sip_staff_model', 'sip_staff_model');
-        $this->load->model('Procrm_voip_calls_model', 'calls_model');
         $this->load->model('leads_model');
+        $this->load->model('staff_model');
     }
 
     /**
@@ -61,20 +60,9 @@ class Api extends AdminController
      */
     protected function _findStaff($tel)
     {
-        $staffs = $this->sip_staff_model->searchStaffByTel($tel);
-        if ($staffs)
-            return $staffs[0];
+        $staff = $this->staff_model->get('', ['sip_telephone' => $tel]);
+        if ($staff)
+            return $staff[0];
         return null;
-    }
-
-    /**
-     * Сохранения звонка
-     * @return mixed
-     */
-    public function createCallHistory()
-    {
-        $data = $this->input->post();
-        $callId = $this->calls_model->createCalls($data);
-        return $callId;
     }
 }

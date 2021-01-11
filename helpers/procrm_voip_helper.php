@@ -3,26 +3,14 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 define('PROCRM_VOIP_VERSIONING', '1.0.1');
 
-$CI = &get_instance();
-
-//$config['hostname'] = '192.168.5.7';
-$config['hostname'] = '91.203.174.201';
-$config['port'] = '55039';
-$config['username'] = 'cdr-read';
-$config['password'] = '777.dmin';
-$config['database'] = 'asteriskcdrdb';
-$config['dbdriver'] = 'mysqli';
-
-$CI->db_asterisk = $CI->load->database($config, TRUE);
-
+// Подключение скриптов и стилей
 if (staff_can('view', PROCRM_VOIP_MODULE_NAME)) {
     hooks()->add_action('app_admin_head', 'procrm_voip_add_head_components');
     hooks()->add_action('app_admin_footer', 'procrm_voip_load_js');
 }
 
-
 /**
- * Injects chat CSS.
+ * Подключение стилей
  *
  * @return void
  */
@@ -34,13 +22,12 @@ function procrm_voip_add_head_components()
 
 
 /**
- * [procrm_voip_load_js inject javascript files].
+ * Подключение скриптов
  *
  * @return void
  */
 function procrm_voip_load_js()
 {
-    echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/js.cookie.js') . '"></script>';
     echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/socket.io.min.js') . '"></script>';
     echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/procrm_voip_dropdown_templates.js' . '?v=' . PROCRM_VOIP_VERSIONING . '') . '"></script>';
     echo '<script src="' . module_dir_url('procrm_voip', 'assets/js/procrm_voip.js' . '?v=' . PROCRM_VOIP_VERSIONING . '') . '"></script>';
@@ -124,7 +111,7 @@ function procrm_voip_date_to_display($date)
     $selectMonth = date('m', strtotime($date));
     $selectDay = date('d', strtotime($date));
 
-    $months = ['', 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+    $months = ['', _l('January'), _l('February'), _l('March'), _l('April'), _l('May'), _l('June'), _l('July'), _l('August'), _l('September'), _l('October'), _l('November'), _l('December')];
 
     if ($selectYear < $currentYear)
         $output .= $selectDay . '-' . $selectMonth . '-' . $selectYear;
@@ -145,6 +132,7 @@ function procrm_voip_date_to_display($date)
 }
 
 /**
+ * Статусы
  * @return array[]
  */
 function procrm_voip_get_statuses()

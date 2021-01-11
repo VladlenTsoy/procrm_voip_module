@@ -3,22 +3,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 $CI = &get_instance();
 
-// Создание таблицы AMI авторизации
-//if (!$CI->db->table_exists(db_prefix() . 'procrm_voip_ami_auth')) {
-//    $CI->db->query('CREATE TABLE `' . db_prefix() . "procrm_voip_ami_auth` (
-//  `id` int(11) NOT NULL,
-//  `ip` varchar(150) NOT NULL,
-//  `port` int(11) NOT NULL,
-//  `login` varchar(150) NOT NULL,
-//  `password` varchar(150) NOT NULL
-//) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
-//
-//    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_ami_auth`
-//  ADD PRIMARY KEY (`id`);');
-//
-//    $CI->db->query('ALTER TABLE `' . db_prefix() . 'procrm_voip_ami_auth`
-//  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT');
-//}
+// Подлючение к базе данных астерикс
+add_option('asterisk_hostname', '127.0.0.1');
+add_option('asterisk_port', '3306');
+add_option('asterisk_username', 'root');
+add_option('asterisk_password', '');
+add_option('asterisk_database', '');
+
+// Подключение к ami
+add_option('ami_host', '');
+add_option('ami_port', '');
+add_option('ami_username', '');
+add_option('ami_password', '');
 
 // Добавление столбца в staff
 if (!$CI->db->field_exists('sip_telephone', db_prefix() . 'staff')) {

@@ -3,6 +3,22 @@
 
 class Procrm_voip_asterisk_cdr_model extends App_Model
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Подлючение бд asterisk
+        $config['hostname'] = get_option('asterisk_hostname');
+        $config['port'] = get_option('asterisk_port');
+        $config['username'] = get_option('asterisk_username');
+        $config['password'] = get_option('asterisk_password');
+        $config['database'] = get_option('asterisk_database');
+        $config['dbdriver'] = 'mysqli';
+        $config['db_debug'] = false;
+
+        $this->db_asterisk = $this->load->database($config, true);
+    }
+
     public function getCdrTable($where, $pagination, $orders = [])
     {
         $where = implode(" AND ", $where);

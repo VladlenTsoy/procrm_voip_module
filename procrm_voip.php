@@ -10,6 +10,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     Requires at least: 2.3.*
 */
 
+// Название модуля
 define('PROCRM_VOIP_MODULE_NAME', 'procrm_voip');
 
 // Установить кнопку в меню
@@ -34,9 +35,9 @@ function procrm_voip_init_menu_items()
 
     // Настройки для администратора
     if (is_admin()) {
-        $CI->app_menu->add_setup_menu_item('procrm_voip_setting', [
+        $CI->app_tabs->add_settings_tab('procrm_voip_setting', [
             'name' => _l('voip_telephony'),
-            'href' => admin_url('procrm_voip/settings'),
+            'view' => 'procrm_voip/settings',
             'position' => 30,
         ]);
     }

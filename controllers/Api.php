@@ -65,4 +65,14 @@ class Api extends AdminController
             return $staff[0];
         return null;
     }
+
+
+    public function checksip()
+    {
+        $staffId = get_staff_user_id();
+        $staff = $this->staff_model->get($staffId);
+        echo json_encode([
+            'sip' => isset($staff->sip_telephone) ? $staff->sip_telephone : null
+        ]);
+    }
 }

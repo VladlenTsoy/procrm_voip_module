@@ -188,7 +188,7 @@ class ProcrmVoipPhoneDropdown {
     socket = null               // Сокет
 
     constructor({sip}) {
-        this.socket = new io('http://localhost:3000?sip=' + sip, {reconnectionAttempts: 3})
+        this.socket = new io('https://pbx.procrm.uz?sip=' + sip, {reconnectionAttempts: 3})
         this.currentCall = localStorage.getItem('PROCRM_VOIP_CURRENT_CALL') ?
             JSON.parse(localStorage.getItem('PROCRM_VOIP_CURRENT_CALL')) : null
 
@@ -463,7 +463,7 @@ class ProcrmVoipPhoneDropdown {
         phone.start()
     } else {
         const response = await $.ajax({
-            url: admin_url + 'procrm_voip/setting/checkSip',
+            url: admin_url + 'procrm_voip/api/checksip',
             method: 'get',
             dataType: 'json'
         })

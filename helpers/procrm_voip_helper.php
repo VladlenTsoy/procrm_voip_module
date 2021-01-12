@@ -1,7 +1,7 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-define('PROCRM_VOIP_VERSIONING', '1.0.1');
+define('PROCRM_VOIP_VERSIONING', '1.0.3');
 
 // Подключение скриптов и стилей
 if (staff_can('telephone', PROCRM_VOIP_MODULE_NAME)) {

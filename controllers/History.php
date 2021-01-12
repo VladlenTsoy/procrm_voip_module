@@ -88,12 +88,12 @@ class History extends AdminController
                 // Абонент / Сотрудник
                 if ($item['amaflags'] === '2') {
                     $row[] = $this->_columnLeadView($item['src']);
-                    $row[] = procrm_voip_phone_to_display($item['src']);
+                    $row[] = '<a href="tel:' . $item['src'] . '">' . procrm_voip_phone_to_display($item['src']) . '</a>';
                     $sip = substr($item['dstchannel'], 4, 3);
                     $row[] = $this->_findStaff($sip) ?? $sip;
                 } else {
                     $row[] = $this->_columnLeadView($item['dst']);
-                    $row[] = procrm_voip_phone_to_display($item['dst']);
+                    $row[] = '<a href="tel:' . $item['dst'] . '">' . procrm_voip_phone_to_display($item['dst']) . '</a>';
                     $row[] = $this->_findStaff($item['cnum']) ?? $item['cnum'];
                 }
                 // Ожидание

@@ -1,0 +1,13 @@
+.title-telephones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+table.table-staffs > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.save-actions {
+    text-align: right;
+}

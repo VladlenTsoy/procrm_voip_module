@@ -16,6 +16,18 @@ add_option('ami_port', '');
 add_option('ami_username', '');
 add_option('ami_password', '');
 
+//
+if (!$CI->db->table_exists(db_prefix() . 'procrm_voip_telephones')) {
+    $CI->db->query('CREATE TABLE `' . db_prefix() . 'procrm_voip_telephones` (
+		`id` INT NOT NULL AUTO_INCREMENT , 
+		`title` VARCHAR(255) NOT NULL ,
+		`telephone` VARCHAR(255) NOT NULL ,  
+		`staff_ids` TEXT,  
+		PRIMARY KEY (`id`)
+	) ENGINE = InnoDB DEFAULT CHARSET=' . $CI->db->char_set . ';');
+
+}
+
 // Добавление столбца в staff
 if (!$CI->db->field_exists('sip_telephone', db_prefix() . 'staff')) {
     $CI->db->query('ALTER TABLE `' . db_prefix() . 'staff` ADD `sip_telephone` INT(11) NULL AFTER `email_signature`;');

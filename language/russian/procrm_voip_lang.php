@@ -53,3 +53,7 @@ $lang['November']                                       = 'Ноябрь';
 $lang['December']                                       = 'Декабрь';
 // Роли
 $lang['telephone']                                      = 'Телефон';
+// Телефонные номера
+$lang['telephone_numbers']                              = 'Телефонные номера';
+$lang['add_telephone']                                  = 'Добавить телефон';
+$lang['extension_number']                               = 'Внутренний номер';

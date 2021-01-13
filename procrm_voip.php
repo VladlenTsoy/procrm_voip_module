@@ -35,6 +35,12 @@ function procrm_voip_init_menu_items()
 
     // Настройки для администратора
     if (is_admin()) {
+        $CI->app_menu->add_setup_menu_item('procrm_voip_setting', [
+            'name' => _l('telephone_numbers'),
+            'href' => admin_url('procrm_voip/telephonenumbers'),
+            'position' => 30,
+        ]);
+
         $CI->app_tabs->add_settings_tab('procrm_voip_setting', [
             'name' => _l('voip_telephony'),
             'view' => 'procrm_voip/settings',

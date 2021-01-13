@@ -10,6 +10,7 @@ class History extends AdminController
         $this->load->model('Procrm_voip_asterisk_cdr_model', 'cdr_model');
         $this->load->model('staff_model');
         $this->load->model('leads_model');
+        $this->load->model('Procrm_voip_telephone', 'telephone_model');
     }
 
     /**
@@ -51,69 +52,76 @@ class History extends AdminController
             $orders[] = ['column' => $aColumns[$order['column']], 'sort' => $order['dir']];
         }
 
-        // Сортировка по сотрудникам
-        if (isset($post['staff_ids']) && $post['staff_ids'] !== '') {
-            $where[] = "(src IN (" . $post['staff_ids'] . ") OR dstchannel IN (" . $post['staff_ids'] . ") OR dst IN (" . $post['staff_ids'] . ") OR cnum IN (" . $post['staff_ids'] . "))";
-        }
+        $telephones = $this->telephone_model->get();
+        if ($telephones) {
+            // Телефонные номера
+            foreach ($telephones as $telephone)
+                $where[] = "(src = {$telephone['telephone']} OR dst = {$telephone['telephone']})";
 
-        // Фильтрация статусы
-        if (isset($post['statuses']) && $post['statuses'] !== '') {
-            $where[] = '(disposition IN ("' . str_replace(',', '","', $post['statuses']) . '"))';
-        }
-
-        // Фильтрация по дате
-        if (isset($post['from_date']) && $post['from_date'] !== '' || isset($post['to_date']) && $post['to_date'] !== '') {
-            $dateFrom = isset($post['from_date']) && $post['from_date'] ? $post['from_date'] : '0000-00-00';
-            $dateTo = isset($post['to_date']) && $post['to_date'] !== '' ? date('Y-m-d', strtotime($post['to_date'] . ' + 1 day')) : date('Y-m-d', strtotime('+ 1 day'));
-            $where[] = "(calldate BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "')";
-        }
-
-        // Поиск по номерам
-        if (isset($post['search']) && $post['search']['value'] !== '') {
-            $where[] = "(src LIKE '%" . $post['search']['value'] . "%' OR dstchannel LIKE '%" . $post['search']['value'] . "%' OR dst LIKE '%" . $post['search']['value'] . "%' OR cnum LIKE '%" . $post['search']['value'] . "%')";
-        }
-
-        list($result, $count) = $this->cdr_model->getCdrTable($where, $pagination, $orders);
-
-        $outputData = [];
-
-        if ($result)
-            foreach ($result as $item) {
-                $row = [];
-
-                // Время
-                $row[] = procrm_voip_date_to_display($item['calldate']);
-                // Тип
-                $row[] = $item['amaflags'] === '2' ? '<i class="fa fa-arrow-down text-success"></i> ' . _l('incoming') : '<i class="fa fa-arrow-up text-danger"></i> ' . _l('outgoing');
-                // Абонент / Сотрудник
-                if ($item['amaflags'] === '2') {
-                    $row[] = $this->_columnLeadView($item['src']);
-                    $row[] = '<a href="tel:' . $item['src'] . '">' . procrm_voip_phone_to_display($item['src']) . '</a>';
-                    $sip = substr($item['dstchannel'], 4, 3);
-                    $row[] = $this->_findStaff($sip) ?? $sip;
-                } else {
-                    $row[] = $this->_columnLeadView($item['dst']);
-                    $row[] = '<a href="tel:' . $item['dst'] . '">' . procrm_voip_phone_to_display($item['dst']) . '</a>';
-                    $row[] = $this->_findStaff($item['cnum']) ?? $item['cnum'];
-                }
-                // Ожидание
-                $row[] = procrm_voip_sec_to_display($item['duration'] - $item['billsec']);
-                // Длительность
-                $row[] = procrm_voip_sec_to_display($item['billsec']);
-                // Статус
-                $row[] = procrm_voip_call_status($item['lastapp'], $item['disposition']);
-                // Запись
-                if (isset($item['recordingfile']) && $item['recordingfile'] && staff_can('recorded', PROCRM_VOIP_MODULE_NAME)) {
-                    $file = '/var/spool/asterisk/monitor/' . date('Y/m/d', strtotime($item['calldate'])) . '/' . $item['recordingfile'];
-                    $row[] = '<button class="btn btn-primary btn-recorded-play" data-file="' . $file . '"><i class="fa fa-play"></i></button>';
-                } else
-                    $row[] = null;
-                $outputData[] = $row;
+            // Сортировка по сотрудникам
+            if (isset($post['staff_ids']) && $post['staff_ids'] !== '') {
+                $where[] = "(src IN (" . $post['staff_ids'] . ") OR dstchannel IN (" . $post['staff_ids'] . ") OR dst IN (" . $post['staff_ids'] . ") OR cnum IN (" . $post['staff_ids'] . "))";
             }
 
-        $response['aaData'] = $outputData;
-        $response['iTotalRecords'] = $count;
-        $response['iTotalDisplayRecords'] = $count;
+            // Фильтрация статусы
+            if (isset($post['statuses']) && $post['statuses'] !== '') {
+                $where[] = '(disposition IN ("' . str_replace(',', '","', $post['statuses']) . '"))';
+            }
+
+            // Фильтрация по дате
+            if (isset($post['from_date']) && $post['from_date'] !== '' || isset($post['to_date']) && $post['to_date'] !== '') {
+                $dateFrom = isset($post['from_date']) && $post['from_date'] ? $post['from_date'] : '0000-00-00';
+                $dateTo = isset($post['to_date']) && $post['to_date'] !== '' ? date('Y-m-d', strtotime($post['to_date'] . ' + 1 day')) : date('Y-m-d', strtotime('+ 1 day'));
+                $where[] = "(calldate BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "')";
+            }
+
+            // Поиск по номерам
+            if (isset($post['search']) && $post['search']['value'] !== '') {
+                $where[] = "(src LIKE '%" . $post['search']['value'] . "%' OR dstchannel LIKE '%" . $post['search']['value'] . "%' OR dst LIKE '%" . $post['search']['value'] . "%' OR cnum LIKE '%" . $post['search']['value'] . "%')";
+            }
+
+            list($result, $count) = $this->cdr_model->getCdrTable($where, $pagination, $orders);
+
+            $outputData = [];
+
+            if ($result)
+                foreach ($result as $item) {
+                    $row = [];
+
+                    // Время
+                    $row[] = procrm_voip_date_to_display($item['calldate']);
+                    // Тип
+                    $row[] = $item['amaflags'] === '2' ? '<i class="fa fa-arrow-down text-success"></i> ' . _l('incoming') : '<i class="fa fa-arrow-up text-danger"></i> ' . _l('outgoing');
+                    // Абонент / Сотрудник
+                    if ($item['amaflags'] === '2') {
+                        $row[] = $this->_columnLeadView($item['src']);
+                        $row[] = '<a href="tel:' . $item['src'] . '">' . procrm_voip_phone_to_display($item['src']) . '</a>';
+                        $sip = substr($item['dstchannel'], 4, 3);
+                        $row[] = $this->_findStaff($sip) ?? $sip;
+                    } else {
+                        $row[] = $this->_columnLeadView($item['dst']);
+                        $row[] = '<a href="tel:' . $item['dst'] . '">' . procrm_voip_phone_to_display($item['dst']) . '</a>';
+                        $row[] = $this->_findStaff($item['cnum']) ?? $item['cnum'];
+                    }
+                    // Ожидание
+                    $row[] = procrm_voip_sec_to_display($item['duration'] - $item['billsec']);
+                    // Длительность
+                    $row[] = procrm_voip_sec_to_display($item['billsec']);
+                    // Статус
+                    $row[] = procrm_voip_call_status($item['lastapp'], $item['disposition']);
+                    // Запись
+                    if (isset($item['recordingfile']) && $item['recordingfile'] && staff_can('recorded', PROCRM_VOIP_MODULE_NAME)) {
+                        $file = '/var/spool/asterisk/monitor/' . date('Y/m/d', strtotime($item['calldate'])) . '/' . $item['recordingfile'];
+                        $row[] = '<button class="btn btn-primary btn-recorded-play" data-file="' . $file . '"><i class="fa fa-play"></i></button>';
+                    } else
+                        $row[] = null;
+                    $outputData[] = $row;
+                }
+
+            $response['aaData'] = $outputData;
+            $response['iTotalRecords'] = $count;
+            $response['iTotalDisplayRecords'] = $count;
+        }
 
         echo json_encode($response);
     }

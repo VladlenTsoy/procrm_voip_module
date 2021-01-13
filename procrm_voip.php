@@ -37,7 +37,7 @@ function procrm_voip_init_menu_items()
     if (is_admin()) {
         $CI->app_menu->add_setup_menu_item('procrm_voip_setting', [
             'name' => _l('telephone_numbers'),
-            'href' => admin_url('procrm_voip/telephonenumbers'),
+            'href' => admin_url('procrm_voip/telephoneNumbers'),
             'position' => 30,
         ]);
 

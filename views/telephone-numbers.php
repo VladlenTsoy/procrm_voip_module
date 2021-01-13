@@ -21,7 +21,7 @@
                                                     <span><?php echo $telephone['title'] ?> (<?php echo $telephone['telephone'] ?>)</span>
                                                     <div>
                                                         <a class="btn btn-danger _delete"
-                                                           href="<?php echo admin_url('procrm_voip/telephonenumbers/delete/' . $telephone['id']) ?>">
+                                                           href="<?php echo admin_url('procrm_voip/telephoneNumbers/delete/' . $telephone['id']) ?>">
                                                             <i class="fa fa-trash"></i>
                                                         </a>
                                                     </div>

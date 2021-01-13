@@ -15,7 +15,7 @@ class TelephoneNumbers extends AdminController
         $post = $this->input->post();
         if (isset($post['create_title']) && isset($post['create_telephone'])) {
             $this->telephone_model->create(['title' => $post['create_title'], 'telephone' => $post['create_telephone']]);
-            redirect(admin_url('procrm_voip/telephonenumbers'));
+            redirect(admin_url('procrm_voip/telephoneNumbers'));
         }
 
         if (isset($post['telephone'])) {
@@ -24,7 +24,7 @@ class TelephoneNumbers extends AdminController
                     $this->db->where('staffid', $key);
                     $this->db->update(db_prefix() . 'staff', ['sip_telephone' => $item === '' ? null : $item]);
                 }
-            redirect(admin_url('procrm_voip/telephonenumbers'));
+            redirect(admin_url('procrm_voip/telephoneNumbers'));
         }
 
         $telephones = $this->telephone_model->get();
@@ -42,6 +42,6 @@ class TelephoneNumbers extends AdminController
     public function delete($id)
     {
         $this->telephone_model->delete($id);
-        redirect(admin_url('procrm_voip/telephonenumbers'));
+        redirect(admin_url('procrm_voip/telephoneNumbers'));
     }
 }

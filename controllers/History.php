@@ -202,7 +202,6 @@ class History extends AdminController
     public function DownloadAudioContent()
     {
         $file = $this->input->get('file');
-//        $file = 'C:\in-781138772-901894326-20210108-151410-1610100850.1669.wav';
         $mime_type = "audio/x-wav, audio/x-aiff, audio/x-aiff, audio/mpeg";
 
         if (file_exists($file)) {

@@ -54,9 +54,14 @@ class History extends AdminController
 
         $telephones = $this->telephone_model->get();
         if ($telephones) {
+            $_telephones = [];
             // Телефонные номера
             foreach ($telephones as $telephone)
-                $where[] = "(src = {$telephone['telephone']} OR dst = {$telephone['telephone']})";
+                $_telephones[] = $telephone['telephone'];
+            if (count($_telephones)) {
+                $_numbers = implode("', '", $_telephones);
+                $where[] = "(src IN ('{$_numbers}') OR dst IN ('{$_numbers}'))";
+            }
 
             // Сортировка по сотрудникам
             if (isset($post['staff_ids']) && $post['staff_ids'] !== '') {
@@ -96,7 +101,7 @@ class History extends AdminController
                     if ($item['amaflags'] === '2') {
                         $row[] = $this->_columnLeadView($item['src']);
                         $row[] = '<a href="tel:' . $item['src'] . '">' . procrm_voip_phone_to_display($item['src']) . '</a>';
-                        if(strpos($item['dstchannel'], 'Local') !== false ) {
+                        if (strpos($item['dstchannel'], 'Local') !== false) {
                             $sip = substr($item['dstchannel'], 6, 3);
                             $row[] = $this->_findStaff($sip) ?? $sip;
                         } else if (strpos($item['dstchannel'], 'SIP') !== false) {

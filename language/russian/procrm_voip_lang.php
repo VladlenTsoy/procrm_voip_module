@@ -38,6 +38,7 @@ $lang['call_failed']                                    = 'Сбой вызова
 $lang['busy']                                           = 'Занят';
 $lang['no_answer']                                      = 'Не отвечает';
 $lang['answered']                                       = 'Отвечено';
+$lang['queue']                                          = 'Очередь';
 // Месяца
 $lang['January']                                        = 'Январь';
 $lang['February']                                       = 'Февраль';

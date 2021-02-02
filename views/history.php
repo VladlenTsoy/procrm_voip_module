@@ -107,6 +107,23 @@
         </div>
     </div>
 </div>
+
+
+<table>
+    <thead>
+    <th>id</th>
+    <th>Название</th>
+    </thead>
+    <tbody>
+    <?php foreach ($types as $type) { ?>
+        <tr>
+            <td><?php echo $type['id'] ?></td>
+            <td><?php echo $type['title'] ?></td>
+        </tr>
+    <?php } ?>
+    </tbody>
+</table>
+
 <?php init_tail(); ?>
 <script src="<?php echo module_dir_url('procrm_voip', 'assets/js/procrm_voip_history.js'); ?>"></script>
 </body>

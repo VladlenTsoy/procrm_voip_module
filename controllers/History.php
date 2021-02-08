@@ -65,7 +65,12 @@ class History extends AdminController
 
             // Сортировка по сотрудникам
             if (isset($post['staff_ids']) && $post['staff_ids'] !== '') {
-                $where[] = "(src IN (" . $post['staff_ids'] . ") OR dstchannel IN (" . $post['staff_ids'] . ") OR dst IN (" . $post['staff_ids'] . ") OR cnum IN (" . $post['staff_ids'] . "))";
+                $whereStaff = [];
+                foreach (explode(',', $post['staff_ids']) as $id)
+                    $whereStaff[] = "(src = " . $id . " OR dstchannel LIKE '%" . $id . "%' OR dst = " . $id . " OR cnum = " . $id . ")";
+                $whereStaff = implode(" OR ", $whereStaff);
+
+                $where[] = $whereStaff;
             }
 
             // Фильтрация статусы
